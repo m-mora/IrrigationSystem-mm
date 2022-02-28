@@ -16,3 +16,134 @@
  *                                                                      *
  * ---------------------------------------------------------------------*/
 
+#include <ESP8266WiFi.h>
+#include <WiFiUdp.h>
+
+#include <NTPClient.h>
+#include <time.h>
+#include <TimeLib.h>
+#include <Timezone.h>
+
+
+/*
+ * Project files
+ */
+#include "secret.h"
+//#include "irrigationsystem.h" 
+
+#define DEBUG 1     // use this define to enable features to debug
+                    // like prints
+
+// // Configure NTP UDP Client
+// WiFiUDP ntpUDP;
+// NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL);
+
+// //  Guadalajara Time zone
+// // and initial and end of the day saving
+// TimeChangeRule mxCDT = {"CDT", First, Sun, Apr, 2, -360};    // Guadalajara day saving 
+// TimeChangeRule mxCST = {"CST ", Last, Sun, Oct, 2, -420};    // Guadalajara standar time
+// Timezone gm(mxCDT, mxCST);
+
+/*
+ * Global variables
+ */
+myTime_t myTime;    // define an estructure to hold the time and date
+time_t local, utc;  // store local time and Universal Time Coordinated (UTC)
+
+// Configure NTP UDP Client
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL);
+
+//  Guadalajara Time zone
+// and initial and end of the day saving
+TimeChangeRule mxCDT = {"CDT", First, Sun, Apr, 2, -360};    // Guadalajara day saving 
+TimeChangeRule mxCST = {"CST ", Last, Sun, Oct, 2, -420};    // Guadalajara standar time
+Timezone gm(mxCDT, mxCST);
+
+
+
+void setup()
+{
+    // Initialize serial port
+    Serial.begin(115200);
+
+    // Connect to wifi
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(500);
+        Serial.print(".");
+    }
+#if DEBUG
+    Serial.println("");
+    Serial.print("Connecting WiFi a ");
+    Serial.print(WiFi.localIP());
+    Serial.println("");
+#endif
+
+    // initialize NTPClient
+    timeClient.begin();
+
+
+}
+
+void loop()
+{
+
+}
+
+
+/*----------------------------------------------------------------------*
+ * This function get the time from the NTP server if available or from 
+ * a real time clock and fill up an structure with current date 
+ * the structure is a global variable
+ * Parameters: void
+ * return: void
+*----------------------------------------------------------------------*/
+
+void getTime()
+{
+
+    if (WiFi.status() == WL_CONNECTED) // Checking the WIFI connection
+    {   
+     
+    // Update NTP CLient in UNIX UTC
+    timeClient.forceUpdate();
+    timeClient.update();
+    unsigned long utc =  timeClient.getEpochTime();
+    int tries = 0;
+    // this is a workaround to a bad data obtained
+    if (utc < 1630373993 && tries < 5)
+    {
+      timeClient.update();
+      tries++;
+    }
+    
+    // Convert to local time
+    local = gm.toLocal(utc);
+    setTime(local);
+    myTime.day = day();
+    myTime.month = month();
+    myTime.year = year();
+    myTime.hour = hour();
+    myTime.minute = minute();
+    myTime.second = second();
+
+    // Update the RTC
+        // Need to add code here
+#if DEBUG
+    char buff[40];
+    sprintf(buff,"%02d/%02d/%04d %02d:%02d:%02d",myTime.day,myTime.month,myTime.year,myTime.hour, myTime.minute,myTime.second);
+    Serial.print("[DEBUG] "); Serial.println(buff);
+
+#endif
+    }
+    else // If lost connection use RTC
+    {
+        // implement RTC code
+#if DEBUG
+        Serial.println("using RTC to get time");
+#endif
+    }
+    return;
+}
