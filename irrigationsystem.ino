@@ -34,16 +34,6 @@
 #define DEBUG 1     // use this define to enable features to debug
                     // like prints
 
-// // Configure NTP UDP Client
-// WiFiUDP ntpUDP;
-// NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL);
-
-// //  Guadalajara Time zone
-// // and initial and end of the day saving
-// TimeChangeRule mxCDT = {"CDT", First, Sun, Apr, 2, -360};    // Guadalajara day saving 
-// TimeChangeRule mxCST = {"CST ", Last, Sun, Oct, 2, -420};    // Guadalajara standar time
-// Timezone gm(mxCDT, mxCST);
-
 /*
  * Global variables
  */
