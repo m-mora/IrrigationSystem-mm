@@ -46,12 +46,15 @@ NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL);
 
 //  Guadalajara Time zone
 // and initial and end of the day saving
+// TODO: there should be a better way to manage day saving dates, not too manual (hard coded).
 TimeChangeRule mxCDT = {"CDT", First, Sun, Apr, 2, -360};    // Guadalajara day saving 
 TimeChangeRule mxCST = {"CST ", Last, Sun, Oct, 2, -420};    // Guadalajara standar time
 Timezone gm(mxCDT, mxCST);
 
-
-
+/************************************************************************
+ *  This function is used to initialize all required objects, structs
+ *  it executus one time at the begining of the program.
+ * *********************************************************************/
 void setup()
 {
     // Initialize serial port
@@ -77,6 +80,9 @@ void setup()
 
 }
 
+/************************************************************************
+ *  Here is the main function
+ * **********************************************************************\
 void loop()
 {
 
