@@ -12,6 +12,8 @@
  * 
  * 
  * *********************************************************************/
+#ifndef IRRIGATION_SYSTEM_H
+#define IRRIGATION_SYSTEM_H
 
 // #include <ESP8266WiFi.h>
 // #include <WiFiUdp.h>
@@ -27,9 +29,20 @@
 #define NTP_INTERVAL 60 * 1000       // miliseconds
 #define NTP_ADDRESS  "pool.ntp.org"  // URL NTP Server
 
+//Define Ports connections
+#define PIR             0
+#define RAIN_SENSOR     2
+#define SDA             4
+#define SCL             5
+#define LEFT            12
+#define RIGTH           13
+#define DOWN            14
+#define ENTER           15
+#define UP              16
+#define HUMIDITY        A0
 
 // save the converted epoc time
-struct myTime_t
+struct 
 {
     byte hour;
     byte minute;
@@ -37,5 +50,6 @@ struct myTime_t
     unsigned int year;
     byte month;
     byte day;
-};
+} myTime_t;
 
+#endif // IRRIGATION_SYSTEM_H
