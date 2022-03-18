@@ -42,7 +42,7 @@
 #define HUMIDITY        A0
 
 // save the converted epoc time
-struct 
+typedef struct 
 {
     byte hour;
     byte minute;
