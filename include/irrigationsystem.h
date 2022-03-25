@@ -15,6 +15,8 @@
 #ifndef IRRIGATION_SYSTEM_H
 #define IRRIGATION_SYSTEM_H
 
+#include <Arduino.h>
+
 // #include <ESP8266WiFi.h>
 // #include <WiFiUdp.h>
 

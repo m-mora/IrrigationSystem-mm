@@ -15,6 +15,7 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#include <Arduino.h>
 
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
@@ -29,7 +30,7 @@
  * Project files
  */
 #include "secret.h"
-//#include "irrigationsystem.h" 
+#include "irrigationsystem.h" 
 
 #define DEBUG 1     // use this define to enable features to debug
                     // like prints
@@ -68,10 +69,12 @@ void setup()
         Serial.print(".");
     }
 #if DEBUG
+    Serial.setDebugOutput(true);
     Serial.println("");
-    Serial.print("Connecting WiFi a ");
+    Serial.print("Connected to IP ");
     Serial.print(WiFi.localIP());
     Serial.println("");
+    Serial.setDebugOutput(false);
 #endif
 
     // initialize NTPClient
