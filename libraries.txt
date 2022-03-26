@@ -1,3 +1,0 @@
-Time by Michael Margolis 
-NTPClient by Fabrice Weiberg
-Timezone by Jack Christensen 

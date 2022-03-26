@@ -15,12 +15,37 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__IRRIGATION_RELAYS_IO_RELAY_H__)
+#define __IRRIGATION_RELAYS_IO_RELAY_H__
 
-#include <Arduino.h>
+#include "action.h"
+#include "relay_config.h"
 
-void setup() {
-}
+class IORelay : public IOAction
+{
+    IORelayConfig_t config;
+public:
+    /**
+     * @brief Construct a new IORelay object
+     * 
+     * @param position IO Position on the expander.
+     * @param config   Relay configuration
+     */
+    IORelay(IOActionPin_e position, IORelayConfig_t config)
+        : IOAction(position), config(config) {}
 
-void loop() {
+    /**
+     * @brief Set the config object
+     * 
+     * @param new_config New configuration for the relay.
+     */
+    void set_config (IORelayConfig_t new_config);
 
-}
+    /**
+     * @brief Update the relay state.
+     * 
+     */
+    void update();
+};
+
+#endif // __IRRIGATION_RELAYS_IO_RELAY_H__

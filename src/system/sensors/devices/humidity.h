@@ -15,12 +15,31 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__IRRIGATION_SYSTEM_SENSORS_DEVICES_HUMIDITY_H__)
+#define __IRRIGATION_SYSTEM_SENSORS_DEVICES_HUMIDITY_H__
 
-#include <Arduino.h>
+#include "../isensor.h"
 
-void setup() {
-}
+class SensorHumidity : public ISensor {
+public:
+    SensorHumidity(const char* name, int pin)
+        : ISensor(name, pin) {}
 
-void loop() {
+    /**
+     * @brief Initializes the sensor
+     * 
+     * @return true  On success
+     * @return false On failure
+     */
+    bool init ();
 
-}
+    /**
+     * @brief Updates the value of sensor.
+     * 
+     * @return true  On success
+     * @return false On failure
+     */
+    bool update ();
+};
+
+#endif // __IRRIGATION_SYSTEM_SENSORS_DEVICES_HUMIDITY_H__

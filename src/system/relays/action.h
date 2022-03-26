@@ -15,12 +15,56 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__IRRIGATION_SYSTEM_RELAYS_ACTION_H__)
+#define __IRRIGATION_SYSTEM_RELAYS_ACTION_H__
 
-#include <Arduino.h>
+#include "io_expander.h"
 
-void setup() {
-}
+class IOAction {
+protected:
+    IOExpander *device;
+    IOActionPin_e bit;
+    bool state;
+public:
+    /**
+     * @brief Construct a new IOAction object
+     * 
+     * @param position IO Position on the expander.
+     */
+    IOAction(IOActionPin_e position)
+        : device(nullptr), bit(position), state(false) {}
 
-void loop() {
+    /**
+     * @brief Initializes the IOAction
+     * 
+     * @return true  On success
+     * @return false On failure
+     */
+    bool init ();
 
-}
+    /**
+     * @brief Updates the state.
+     * 
+     * @return true  On success
+     * @return false On failure
+     */
+    bool update ();
+
+    /**
+     * @brief Attach action to a IO Expander.
+     * 
+     * @param expander Pointer to IO Expander object.
+     */
+    void attach_expander (IOExpander* expander);
+
+    /**
+     * @brief Returns the state.
+     * 
+     * @return bool the state of the action.
+     */
+    bool active () const {
+        return this->state;
+    }
+};
+
+#endif // __IRRIGATION_SYSTEM_RELAYS_ACTION_H__

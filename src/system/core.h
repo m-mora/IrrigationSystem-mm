@@ -15,12 +15,12 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__IRRIGATION_SYSTEM_CORE_H__)
+#define __IRRIGATION_SYSTEM_CORE_H__
 
-#include <Arduino.h>
+class IrrigationSystem {
+public:
+    IrrigationSystem();
+};
 
-void setup() {
-}
-
-void loop() {
-
-}
+#endif // __IRRIGATION_SYSTEM_CORE_H__
