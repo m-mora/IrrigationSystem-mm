@@ -15,12 +15,11 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__IRRIGATION_SYSTEM_RELAYS_CONFIGURATION_H__)
+#define __IRRIGATION_SYSTEM_RELAYS_CONFIGURATION_H__
 
-#include <Arduino.h>
+typedef struct {
+    
+} IORelayConfig_t;
 
-void setup() {
-}
-
-void loop() {
-
-}
+#endif // __IRRIGATION_SYSTEM_RELAYS_CONFIGURATION_H__

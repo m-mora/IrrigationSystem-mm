@@ -15,12 +15,18 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__IRRIGATION_SYSTEM_TIME_H__)
+#define __IRRIGATION_SYSTEM_TIME_H__
 
-#include <Arduino.h>
+#include <stdint.h>
 
-void setup() {
-}
+typedef struct {
+    uint8_t year;
+    uint8_t month;
+    uint8_t day;
+    uint8_t hour;
+    uint8_t minute;
+    uint8_t second;
+} datetime_t;
 
-void loop() {
-
-}
+#endif // __IRRIGATION_SYSTEM_TIME_H__

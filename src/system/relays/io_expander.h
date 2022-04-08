@@ -15,12 +15,55 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__)
+#define __IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__
 
-#include <Arduino.h>
+#include <stdint.h>
 
-void setup() {
-}
+/**
+ * @brief Represents each of the IO entrys in the IO expander.
+ * 
+ */
+typedef enum {
+    IO_0,
+    IO_1,
+    IO_2,
+    IO_3,
+    IO_4,
+    IO_5,
+    IO_6,
+    IO_7,
+    IO_MAX
+} IOActionPin_e;
 
-void loop() {
+class IOExpander
+{
+public:
+    /**
+     * @brief Initializes the IOExpander
+     * 
+     * @param address I2C Address
+     * @return true  On success
+     * @return false On failure
+     */
+    bool init(uint8_t address);
 
-}
+    /**
+     * @brief Writes a value in the IOExpander
+     * 
+     * @param position IO Position on the expander
+     * @param state    Value to be written
+     */
+    void write(IOActionPin_e position, bool state);
+
+    /**
+     * @brief 
+     * 
+     * @param position IO Position on the expander
+     * @return true  Is HIGH
+     * @return false Is LOW
+     */
+    bool read(IOActionPin_e position);
+};
+
+#endif // __IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__

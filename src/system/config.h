@@ -15,12 +15,18 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__IRRIGATION_SYSTEM_CONFIG_H__)
+#define __IRRIGATION_SYSTEM_CONFIG_H__
 
-#include <Arduino.h>
+/**
+ * @brief Wifi SSID for NTP connection
+ *      Is defined in user_config.cpp
+ */
+extern const char* NTP_WIFI_SSID;
+/**
+ * @brief Wifi Password for NTP connection
+ *      Is defined in user_config.cpp
+ */
+extern const char* NTP_WIFI_PASSWORD;
 
-void setup() {
-}
-
-void loop() {
-
-}
+#endif // __IRRIGATION_SYSTEM_CONFIG_H__

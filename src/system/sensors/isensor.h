@@ -15,12 +15,47 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__IRRIGATION_SYSTEM_SENSORS_INTERFACE_H__)
+#define __IRRIGATION_SYSTEM_SENSORS_INTERFACE_H__
 
-#include <Arduino.h>
+#include <stdint.h>
 
-void setup() {
-}
+class ISensor
+{
+protected:
+    const char* name;
 
-void loop() {
+    int pin;
+    int value;
 
-}
+public:
+    ISensor(const char* name, int pin)
+        : name(name), pin(pin), value(0) {}
+
+    /**
+     * @brief Initializes the sensor
+     * 
+     * @return true  On success
+     * @return false On failure
+     */
+    bool init ();
+
+    /**
+     * @brief Updates the value of sensor.
+     * 
+     * @return true  On success
+     * @return false On failure
+     */
+    bool update ();
+
+    /**
+     * @brief Returns the stored value.
+     * 
+     * @return int Last readed value.
+     */
+    int get () const {
+        return this->value;
+    }
+};
+
+#endif // __IRRIGATION_SYSTEM_SENSORS_INTERFACE_H__

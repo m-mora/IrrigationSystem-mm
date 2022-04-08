@@ -15,12 +15,19 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__IRRIGATION_SYSTEM_BUILDER_H__)
+#define __IRRIGATION_SYSTEM_BUILDER_H__
 
-#include <Arduino.h>
+class IrrigationSystem;
 
-void setup() {
-}
+class IrrigationSystemBuilder {
+public:
+    IrrigationSystemBuilder &addSensor();
+    IrrigationSystemBuilder &addComponent ();
+    IrrigationSystemBuilder &setDisplay ();
+    IrrigationSystemBuilder &setTimeProvider ();
 
-void loop() {
+    IrrigationSystem build();
+};
 
-}
+#endif // __IRRIGATION_SYSTEM_BUILDER_H__

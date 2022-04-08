@@ -15,12 +15,17 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__UTILS_MEM_H__)
+#define __UTILS_MEM_H__
 
-#include <Arduino.h>
+#include <stdlib.h>
 
-void setup() {
-}
+/**
+ * @brief Sets a buffer of zeros.
+ * 
+ * @param buffer Pointer to the buffer.
+ * @param size   Size of the buffer.
+ */
+extern void ZeroMem (void *buffer, size_t size);
 
-void loop() {
-
-}
+#endif // __UTILS_MEM_H__
