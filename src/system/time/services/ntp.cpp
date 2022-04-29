@@ -4,9 +4,6 @@
 #define NTP_INTERVAL 60 * 1000       // miliseconds
 #define NTP_ADDRESS  "pool.ntp.org"  // URL NTP Server
 
-extern const char* NTP_WIFI_SSID;
-extern const char* NTP_WIFI_PASSWORD;
-
 /**
  * @brief Initialize the time provider.
  * 
