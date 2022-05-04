@@ -1,0 +1,20 @@
+name: PlatformIO CI
+
+on: [push, pull_request]
+
+jobs:
+  platformio-build:
+    runs-on: ubuntu-latest
+    container: infinitecoding/platformio-for-ci:latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build firmware
+        run: platformio run -d . -e esp12e
+
+      - name: Upload firware artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: firmware.elf
+          path: example/.pio/build/esp12e/firmware.elf
