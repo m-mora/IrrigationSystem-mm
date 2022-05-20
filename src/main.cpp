@@ -18,7 +18,12 @@
 
 #include <Arduino.h>
 
+#include "system/core.h"
+
+IrrigationSystem iSys;
+
 void setup() {
+    iSys.init();
 }
 
 void loop() {
