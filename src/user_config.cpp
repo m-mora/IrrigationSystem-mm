@@ -1,2 +1,2 @@
-const char* WIFI_SSID = "xxxxxxxxx";    // change for your ssid 
-const char* WIFI_PASSWORD = "xxxxxxxx"; // Add your password
+const char* WIFI_SSID = "Klic_network";    // change for your ssid 
+const char* WIFI_PASSWORD = ""; // Add your password

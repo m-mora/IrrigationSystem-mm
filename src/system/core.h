@@ -21,6 +21,7 @@
 class IrrigationSystem {
 public:
     IrrigationSystem();
+    void init();
 };
 
 #endif // __IRRIGATION_SYSTEM_CORE_H__

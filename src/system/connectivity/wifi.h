@@ -20,6 +20,7 @@
 #define __IRRIGATION_SYSTEM_CONNECTIVITY_WIFI_H__
 
 #include <ESP8266WiFi.h>
+#include <WiFiManager.h>
 
 /**
  * @brief Specifies the wifi ssid.
