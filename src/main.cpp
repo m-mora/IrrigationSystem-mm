@@ -18,7 +18,10 @@
 
 #include <Arduino.h>
 
+#include "system/core.h"
+
 void setup() {
+    IrrigationSystem();
 }
 
 void loop() {
