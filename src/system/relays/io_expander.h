@@ -17,6 +17,8 @@
  * ---------------------------------------------------------------------*/
 #if !defined(__IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__)
 #define __IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__
+#define PCA9554_OUTPUT_REG1 1
+#define PCA9554_CONFIG_REG3 3
 
 #include <stdint.h>
 
@@ -38,6 +40,10 @@ typedef enum {
 
 class IOExpander
 {
+private:
+    uint8_t ADDR;   //Address I2C value 7bits format    
+   
+    
 public:
     /**
      * @brief Initializes the IOExpander
@@ -54,7 +60,7 @@ public:
      * @param position IO Position on the expander
      * @param state    Value to be written
      */
-    void write(IOActionPin_e position, bool state);
+    bool write(IOActionPin_e position, bool state);
 
     /**
      * @brief 
