@@ -1,56 +1,35 @@
 #include <Arduino.h>
 #include "io_expander.h"
-#include <Wire.h>
 #include <stdint.h>
 
 bool IOExpander::init(uint8_t address)
 {
-    uint8_t error;
     bool retuVal = false;
 
-    ADDR = address;
+    ADDR = address;    
 
-    Wire.begin(); // Configuring ESP as I2C controller
-    Wire.beginTransmission(address);
-    error = Wire.endTransmission();
+    i2c.init(ADDR);   
 
-    if (error == 0)
-    {
 
-        Serial.print("****Configuration of IOExpander PCA9554***\n");
-        Serial.print("Configurating Reg3: Configuration Register\n");
-        Wire.beginTransmission(address);
-        Wire.write(PCA9554_CONFIG_REG3); // Number of Configuration register
-        Wire.write(0x00);                // Configurating as output all
-        Wire.endTransmission();          // Stop transmitting
+    Serial.print("****Configuration of IOExpander PCA9554***\n");
+    Serial.print("Configurating Reg3: Configuration Register\n");
+    i2c.writeWord(PCA9554_CONFIG_REG3,0x00);
 
-        // Safe State: Configuring all outputs to zero volts
-        Serial.print("Configurating Reg1: Configuration Register\n");
-        Wire.beginTransmission(address);
-        Wire.write(PCA9554_OUTPUT_REG1); // Number of Configuration register
-        Wire.write(0x00);                // Turning off all outputs
-        Wire.endTransmission();          // Stop transmitting
+    // Safe State: Configuring all outputs to zero volts
+    Serial.print("Configurating Reg1: Configuration Register\n");
+    retuVal = i2c.writeWord(PCA9554_OUTPUT_REG1,0x00);    
 
-        retuVal = true;
-    }
 
     return retuVal;
 }
 
 bool IOExpander::write(IOActionPin_e position, bool state)
 {
-    uint8_t currOutputSt, newOutputSt, mask, error;
+    uint8_t currOutputSt, newOutputSt, mask, error_N;
     // Reading current value out all output register (8 bits)
 
-    Wire.beginTransmission(ADDR);
-    Wire.write(PCA9554_OUTPUT_REG1); // Calling to register # 1 (Output register)
-    Wire.endTransmission();          // Configuration register
-    if (Wire.requestFrom((int)ADDR, 1) != 1)
-    {
-        return false; // error code is above normal data range
-    };
 
-    currOutputSt = Wire.read();
+    currOutputSt = i2c.readByte(PCA9554_OUTPUT_REG1);     
     Serial.print(currOutputSt, BIN);
     Serial.print("\n\r");
 
@@ -65,44 +44,22 @@ bool IOExpander::write(IOActionPin_e position, bool state)
         mask = ~(1 << position);
         newOutputSt = currOutputSt & mask;
     }
+    error_N = i2c.writeWord(PCA9554_OUTPUT_REG1, newOutputSt);
 
-    Wire.beginTransmission(ADDR);
-    Wire.write(PCA9554_OUTPUT_REG1); // Configuration register
-    Wire.write(newOutputSt);         // Configuring as output all
-    error = Wire.endTransmission();  // Stop transmitting
-
-    if (error != 0)
-    {
-        Serial.print("ERROR\n\r");
-        return false;
-    }
-    else
-    {
-        Serial.print("OK\n\r");
-        return true;
-    }
+    return error_N;
 }
 
 bool IOExpander::read(IOActionPin_e position)
 {
-    uint8_t _inputData, maskR;
+    uint8_t readData, maskR;
 
     maskR = 0x01; // Mask to ready the LSB
 
-    Wire.beginTransmission(ADDR);
-    Wire.write(PCA9554_OUTPUT_REG1);
-    Wire.endTransmission(); // Configuration register
+    readData = i2c.readByte(PCA9554_OUTPUT_REG1);// Read the value of output register
+    readData = readData >> position; // shift right to set LSB as interest data
+    readData = readData & maskR;     // Filter the LSB
 
-    if (Wire.requestFrom((int)ADDR, 1) != 1)
-    {
-        return false; // error code is above normal data range
-    };
-
-    _inputData = Wire.read();            // Read the value of output register
-    _inputData = _inputData >> position; // shift right to set LSB as interest data
-    _inputData = _inputData & maskR;     // Filter the LSB
-
-    if (_inputData == 0)
+    if (readData == 0)
     {
         return false;
     }
