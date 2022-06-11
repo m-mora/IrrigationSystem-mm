@@ -17,14 +17,12 @@
  * ---------------------------------------------------------------------*/
 #include <Wire.h>
 
-
-class I2CMaster
+class I2CDevice
 {
 private:
     uint8_t ADDR; // Address I2C value 7bits format
 
 public:
- 
     void init(uint8_t address);
 
     bool i2cScan();

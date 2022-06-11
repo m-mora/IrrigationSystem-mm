@@ -19,7 +19,7 @@
 #define __IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__
 #define PCA9554_OUTPUT_REG1 1
 #define PCA9554_CONFIG_REG3 3
-#include "system/bus/i2c/i2cMaster.h"
+#include "system/bus/i2c/I2CDevice.h"
 #include <stdint.h>
 
 /**
@@ -45,7 +45,7 @@ private:
     uint8_t ADDR; // Address I2C value 7bits format
 
 public:
-    I2CMaster i2c;
+    I2CDevice i2cDevice;
     /**
      * @brief Initializes the IOExpander
      *
