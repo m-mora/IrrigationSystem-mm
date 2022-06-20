@@ -10,8 +10,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Check PlatformIO version
+        run: pio --version
+
+      - name: Install platform
+        run: pio platform install espressif8266
+
       - name: Build firmware
-        run: platformio run -d . -e esp12e
+        run: pio run -d . -e esp12e
 
       - name: Upload firware artifact
         uses: actions/upload-artifact@v2
