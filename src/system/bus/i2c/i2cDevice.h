@@ -15,62 +15,21 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
-#if !defined(__IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__)
-#define __IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__
-#define PCA9554_OUTPUT_REG1 1
-#define PCA9554_CONFIG_REG3 3
-#include "system/bus/i2c/I2CDevice.h"
-#include <stdint.h>
+#include <Wire.h>
 
-/**
- * @brief Represents each of the IO entrys in the IO expander.
- *
- */
-typedef enum
-{
-    IO_0,
-    IO_1,
-    IO_2,
-    IO_3,
-    IO_4,
-    IO_5,
-    IO_6,
-    IO_7,
-    IO_MAX
-} IOActionPin_e;
-
-class IOExpander
+class I2CDevice
 {
 private:
     uint8_t ADDR; // Address I2C value 7bits format
 
 public:
-    I2CDevice i2cDevice;
-    /**
-     * @brief Initializes the IOExpander
-     *
-     * @param address I2C Address
-     * @return true  On success
-     * @return false On failure
-     */
-    bool init(uint8_t address);
+    void init(uint8_t address);
 
-    /**
-     * @brief Writes a value in the IOExpander
-     *
-     * @param position IO Position on the expander
-     * @param state    Value to be written
-     */
-    bool write(IOActionPin_e position, bool state);
+    bool i2cScan();
 
-    /**
-     * @brief
-     *
-     * @param position IO Position on the expander
-     * @return true  Is HIGH
-     * @return false Is LOW
-     */
-    bool read(IOActionPin_e position);
+    bool writeByte(uint8_t data);
+
+    uint8_t readByte(uint8_t regNum);
+
+    bool writeWord(uint8_t byte1, uint8_t byte2);
 };
-
-#endif // __IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__
