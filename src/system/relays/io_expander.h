@@ -19,7 +19,7 @@
 #define __IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__
 #define PCA9554_OUTPUT_REG1 1
 #define PCA9554_CONFIG_REG3 3
-#include "system/bus/i2c/I2CDevice.h"
+#include "system/bus/i2c/i2cDevice.h"
 #include <stdint.h>
 
 /**

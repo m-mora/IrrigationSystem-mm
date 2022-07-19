@@ -1,4 +1,4 @@
-#include "I2CDevice.h"
+#include "i2cDevice.h"
 #include <Arduino.h>
 #include <stdint.h>
 
