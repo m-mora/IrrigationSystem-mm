@@ -23,3 +23,4 @@ bool TimeProviderNTP::init() {
  */
 bool TimeProviderNTP::update() {
     return true;
+}
