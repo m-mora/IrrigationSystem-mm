@@ -410,4 +410,6 @@ ListNode<T>* LinkedList<T>::findEndOfSortedString(ListNode<T> *p, int (*cmp)(T &
 
 #define for_in_range(__type, __iterator, __min_range, __max_range) for (__type __iterator = (__min_range); (__iterator) < (__max_range); (__iterator)++)
 
+#define ARRAY_SIZE(__arr) (sizeof(__arr)/sizeof(__arr[0]))
+
 #endif // __LINKED_LIST_H__
