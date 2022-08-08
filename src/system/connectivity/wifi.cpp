@@ -1,4 +1,7 @@
 #include "wifi.h"
+#include "utils/logger.h"
+
+static WiFiManager wm;
 
 /**
  * @brief Initialize WIFI interface using the specified configuration.
@@ -12,22 +15,16 @@ wl_status_t WifiInitialize (
     const char* wifi_password
     )
 {
+    logger << LOG_INFO << "Initializing WiFi provider!" << EndLine;
+
     // Set the ESP as AccesPoint
     WiFi.mode(WIFI_STA);
-
-    // TODO: Remove this code and use a general log library
-    Serial.begin(115200);
-    Serial.println();
-    Serial.println("Conectando...");
-
-    WiFiManager wm;
 
     // will try to connect when it has saved credentials
     // if it fails will start the access point
     if (wm.autoConnect(wifi_ssid,wifi_password)){
-        Serial.print("Conectado a IP: ");
-        Serial.println(WiFi.localIP());
+        logger << LOG_INFO << "WiFi AutoConnect done! IP: " << WiFi.localIP() << EndLine;
     }
-    
+
     return WL_CONNECTED;
 }
