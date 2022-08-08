@@ -24,12 +24,3 @@ bool TimeProviderNTP::init() {
 bool TimeProviderNTP::update() {
     return true;
 }
-
-/**
- * @brief Returns a copy of the internal datetime.
- * 
- * @return datetime_t Last updated datetime.
- */
-datetime_t TimeProviderNTP::get() {
-    return this->datetime;
-}

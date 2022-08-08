@@ -38,13 +38,6 @@ public:
      * @return false On failure
      */
     bool update();
-
-    /**
-     * @brief Returns a copy of the internal datetime.
-     * 
-     * @return datetime_t Last updated datetime.
-     */
-    datetime_t get();
 };
 
 
