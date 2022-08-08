@@ -3,7 +3,6 @@
 
 #include "connectivity/wifi.h"
 #include "utils/logger.h"
-#include "time/services/dummy.h"
 
 SysLogger logger(nullptr);
 
