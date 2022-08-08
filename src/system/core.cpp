@@ -3,12 +3,11 @@
 
 #include "connectivity/wifi.h"
 #include "utils/logger.h"
+#include "time/services/dummy.h"
 
 SysLogger logger(nullptr);
 
-IrrigationSystem::IrrigationSystem () {
-
-}
+IrrigationSystem::IrrigationSystem () { }
 
 void IrrigationSystem::init() {
     // Initialize serial to initializa the logger.
@@ -19,6 +18,7 @@ void IrrigationSystem::init() {
     // Dump firmware information
     DumpSysInfo();
 
+    logger << LOG_MASTER << LOGGER_TEXT_YELLOW << "Initializing system" << EndLine;
     // Setup WiFi interface
     WifiInitialize();
 }
