@@ -15,12 +15,13 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
-#if !defined(__IRRIGATION_SYSTEM_TIME_SERVICES_NTP_H__)
-#define __IRRIGATION_SYSTEM_TIME_SERVICES_NTP_H__
+#if !defined(__IRRIGATION_SYSTEM_TIME_SERVICES_DUMMY_H__)
+#define __IRRIGATION_SYSTEM_TIME_SERVICES_DUMMY_H__
 
 #include "../itime_provider.h"
+#include "../datetime.h"
 
-class TimeProviderNTP : public ITimeProvider
+class DummyTimeProvider : public ITimeProvider
 {
 public:
     /**
@@ -29,7 +30,9 @@ public:
      * @return true  On success
      * @return false On failure
      */
-    bool init();
+    bool init() override {
+        return true;
+    }
 
     /**
      * @brief Update the internal datetime.
@@ -37,8 +40,10 @@ public:
      * @return true  On success
      * @return false On failure
      */
-    bool update();
+    bool update() override {
+        return true;
+    }
 };
 
 
-#endif // __IRRIGATION_SYSTEM_TIME_SERVICES_NTP_H__
+#endif // __IRRIGATION_SYSTEM_TIME_SERVICES_DUMMY_H__

@@ -30,7 +30,7 @@ public:
      * @return true  On success
      * @return false On failure
      */
-    bool init();
+    virtual bool init() = 0;
 
     /**
      * @brief Update the internal datetime.
@@ -38,14 +38,14 @@ public:
      * @return true  On success
      * @return false On failure
      */
-    bool update();
+    virtual bool update() = 0;
 
     /**
      * @brief Returns a copy of the internal datetime.
      * 
      * @return datetime_t Last updated datetime.
      */
-    datetime_t get();
+    datetime_t get() const { return datetime; }
 };
 
 #endif // __IRRIGATION_SYSTEM_TIME_INTERFACE_H__
