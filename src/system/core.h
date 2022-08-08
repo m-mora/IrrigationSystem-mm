@@ -18,7 +18,21 @@
 #if !defined(__IRRIGATION_SYSTEM_CORE_H__)
 #define __IRRIGATION_SYSTEM_CORE_H__
 
+#include "system/time/itime_provider.h"
+
+#define KERNEL_VERSION "0.1.0"
+
 class IrrigationSystem {
+    //
+    // Components
+    //
+    ITimeProvider* timeProvider;
+
+    //
+    // Private methods
+    //
+    void DumpSysInfo();
+
 public:
     IrrigationSystem();
     void init();
