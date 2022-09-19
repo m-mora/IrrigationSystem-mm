@@ -1,36 +1,31 @@
 #include "ntp.h"
-#include <NTPClient.h>
-#include <WiFiUdp.h>
-#include "utils/time_converter.cpp"
+#include "utils/time_converter.h"
 
-
-#define NTP_OFFSET   60 * 60         // seconds
-#define NTP_INTERVAL 60 * 1000       // miliseconds
-#define NTP_ADDRESS  "pool.ntp.org"  // URL NTP Server
-
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP);
+TimeProviderNTP::TimeProviderNTP() : timeClient(ntpUDP) {}
 
 /**
  * @brief Initialize the time provider.
- * 
+ *
  * @return true  On success
  * @return false On failure
  */
-bool TimeProviderNTP::init() {
+bool TimeProviderNTP::init()
+{
     timeClient.begin();
+    timeClient.update();
     return true;
 }
 
 /**
  * @brief Update the internal datetime.
- * 
+ *
  * @return true  On success
  * @return false On failure
  */
-bool TimeProviderNTP::update() {
+bool TimeProviderNTP::update()
+{
+    this->datetime = {0, 0, 0, 0, 0, 0};
     timeClient.update();
-    this->datetime = { 0, 0, 0, 0, 0, 0 };
-    datetime = TimeConverter(timeClient.getEpochTime());
+    datetime = getDateTimeFromEpochTime(timeClient.getEpochTime());
     return true;
 }

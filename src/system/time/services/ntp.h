@@ -19,10 +19,15 @@
 #define __IRRIGATION_SYSTEM_TIME_SERVICES_NTP_H__
 
 #include "../itime_provider.h"
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 
 class TimeProviderNTP : public ITimeProvider
 {
+    WiFiUDP ntpUDP;
+    NTPClient timeClient;
 public:
+    TimeProviderNTP();
     /**
      * @brief Initialize the time provider.
      * 

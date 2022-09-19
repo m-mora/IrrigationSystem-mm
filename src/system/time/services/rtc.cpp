@@ -1,7 +1,4 @@
 #include "rtc.h"
-#include "RTClib.h"
-
-RTC_DS3231 rtc;
 
 /**
  * @brief Initialize the time provider.
@@ -15,16 +12,7 @@ bool TimeProviderRTC::init() {
         Serial.flush();
         return false;
     }
-    else{
-        this->datetime = { 0, 0, 0, 0, 0, 0 };
-        DateTime now = rtc.now();
-        datetime.year   = now.year();
-        datetime.month  = now.month();
-        datetime.day    = now.day();
-        datetime.minute = now.minute();
-        datetime.second = now.second();
-        return true;
-    }  
+    return true;
 }
 
 /**
@@ -34,5 +22,12 @@ bool TimeProviderRTC::init() {
  * @return false On failure
  */
 bool TimeProviderRTC::update() {
+    this->datetime = { 0, 0, 0, 0, 0, 0 };
+    DateTime now = rtc.now();
+    datetime.year   = now.year();
+    datetime.month  = now.month();
+    datetime.day    = now.day();
+    datetime.minute = now.minute();
+    datetime.second = now.second();
     return true;
 }

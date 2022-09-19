@@ -25,7 +25,9 @@
  * @brief Converts Epoch format to datetime format
  * 
  * @param epoch Time in Epoch format
+ * 
+ * @return Return date in time
  */
-  datetime_t TimeConverter(unsigned long epoch);
+datetime_t getDateTimeFromEpochTime(unsigned long epoch);
 
 #endif // __UTILS_TIME_CONVERTER__
