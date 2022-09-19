@@ -1,5 +1,7 @@
 #include "rtc.h"
 
+TimeProviderRTC::TimeProviderRTC(){}
+
 /**
  * @brief Initialize the time provider.
  * 

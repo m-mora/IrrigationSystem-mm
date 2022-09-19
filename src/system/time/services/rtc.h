@@ -21,11 +21,12 @@
 #include "../itime_provider.h"
 #include "RTClib.h"
 
-RTC_DS3231 rtc;
 
 class TimeProviderRTC : public ITimeProvider
 {
+    RTC_DS3231 rtc;
 public:
+    TimeProviderRTC();
     /**
      * @brief Initialize the time provider.
      * 
