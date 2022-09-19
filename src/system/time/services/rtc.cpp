@@ -1,5 +1,7 @@
 #include "rtc.h"
 
+TimeProviderRTC::TimeProviderRTC(){}
+
 /**
  * @brief Initialize the time provider.
  * 
@@ -7,7 +9,11 @@
  * @return false On failure
  */
 bool TimeProviderRTC::init() {
-    this->datetime = { 0, 0, 0, 0, 0, 0 };
+    if (! rtc.begin()) {
+        Serial.println("Couldn't find RTC");
+        Serial.flush();
+        return false;
+    }
     return true;
 }
 
@@ -18,5 +24,12 @@ bool TimeProviderRTC::init() {
  * @return false On failure
  */
 bool TimeProviderRTC::update() {
+    this->datetime = { 0, 0, 0, 0, 0, 0 };
+    DateTime now = rtc.now();
+    datetime.year   = now.year();
+    datetime.month  = now.month();
+    datetime.day    = now.day();
+    datetime.minute = now.minute();
+    datetime.second = now.second();
     return true;
 }

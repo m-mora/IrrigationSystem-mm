@@ -19,10 +19,14 @@
 #define __IRRIGATION_SYSTEM_TIME_SERVICES_RTC_H__
 
 #include "../itime_provider.h"
+#include "RTClib.h"
+
 
 class TimeProviderRTC : public ITimeProvider
 {
+    RTC_DS3231 rtc;
 public:
+    TimeProviderRTC();
     /**
      * @brief Initialize the time provider.
      * 

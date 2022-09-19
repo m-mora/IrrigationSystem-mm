@@ -15,35 +15,19 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
-#if !defined(__IRRIGATION_SYSTEM_TIME_SERVICES_NTP_H__)
-#define __IRRIGATION_SYSTEM_TIME_SERVICES_NTP_H__
 
-#include "../itime_provider.h"
-#include <NTPClient.h>
-#include <WiFiUdp.h>
+#if !defined(__UTILS_TIME_CONVERTER__)
+#define __UTILS_TIME_CONVERTER__
 
-class TimeProviderNTP : public ITimeProvider
-{
-    WiFiUDP ntpUDP;
-    NTPClient timeClient;
-public:
-    TimeProviderNTP();
-    /**
-     * @brief Initialize the time provider.
-     * 
-     * @return true  On success
-     * @return false On failure
-     */
-    bool init();
+#include "system/time/datetime.h"
 
-    /**
-     * @brief Update the internal datetime.
-     * 
-     * @return true  On success
-     * @return false On failure
-     */
-    bool update();
-};
+/**
+ * @brief Converts Epoch format to datetime format
+ * 
+ * @param epoch Time in Epoch format
+ * 
+ * @return Return date in time
+ */
+datetime_t getDateTimeFromEpochTime(unsigned long epoch);
 
-
-#endif // __IRRIGATION_SYSTEM_TIME_SERVICES_NTP_H__
+#endif // __UTILS_TIME_CONVERTER__
