@@ -19,17 +19,15 @@
 
 class I2CDevice
 {
-private:
     uint8_t ADDR; // Address I2C value 7bits format
 
 public:
     void init(uint8_t address);
 
-    bool i2cScan();
-
     bool writeByte(uint8_t data);
+    bool writeWord(uint16_t data);
 
     uint8_t readByte(uint8_t regNum);
 
-    bool writeWord(uint8_t byte1, uint8_t byte2);
+    uint8_t getAddress() const { return ADDR; }
 };

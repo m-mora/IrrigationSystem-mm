@@ -20,10 +20,14 @@
 
 #include "action.h"
 #include "relay_config.h"
+#include "RTClib.h"
 
 class IORelay : public IOAction
 {
     IORelayConfig_t config;
+    bool isRelayOn;
+    DateTime storedTurnOnTime;
+
 public:
     /**
      * @brief Construct a new IORelay object
@@ -32,7 +36,7 @@ public:
      * @param config   Relay configuration
      */
     IORelay(IOActionPin_e position, IORelayConfig_t config)
-        : IOAction(position), config(config) {}
+        : IOAction(position), config(config), isRelayOn(false), storedTurnOnTime() {}
 
     /**
      * @brief Set the config object
@@ -46,6 +50,12 @@ public:
      * 
      */
     void update();
+private:
+    bool isTurnOnDurationTimeOver();
+    bool isMomentToTurnOn();
+
+    void turnOffRelay();
+    void turnOnRelay();
 };
 
 #endif // __IRRIGATION_RELAYS_IO_RELAY_H__

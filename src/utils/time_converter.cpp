@@ -7,8 +7,8 @@
 #define SECONDS_IN_MINUTE 60
 #define YEAR_ZERO 1970
 
-datetime_t getDateTimeFromEpochTime(unsigned long epoch){
-    datetime_t datetime;
+Time_s getDateTimeFromEpochTime(unsigned long epoch){
+    Time_s datetime;
     int residue = 0;
     //Year
     datetime.year = (uint8_t) YEAR_ZERO+(epoch/SECONDS_IN_YEAR);

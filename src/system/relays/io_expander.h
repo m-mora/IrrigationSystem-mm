@@ -41,11 +41,8 @@ typedef enum
 
 class IOExpander
 {
-private:
-    uint8_t ADDR; // Address I2C value 7bits format
-
-public:
     I2CDevice i2cDevice;
+public:
     /**
      * @brief Initializes the IOExpander
      *
@@ -71,6 +68,10 @@ public:
      * @return false Is LOW
      */
     bool read(IOActionPin_e position);
+
+    uint8_t getAddress() const {
+        return i2cDevice.getAddress();
+    }
 };
 
 #endif // __IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__
