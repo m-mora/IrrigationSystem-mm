@@ -26,11 +26,13 @@ RelayCollectionBuilder &RelayCollectionBuilder::setSystemData(SystemData_t *sysD
 
 RelayBuilder RelayCollectionBuilder::forPin(IOActionPin_e position)
 {
+    logger << LOG_ERROR << "Build new relay for bit " << (uint8_t)position << EndLine;
     return RelayBuilder(position, this);
 }
 
 LinkedList<IORelay*> RelayCollectionBuilder::build()
 {
+    logger << LOG_ERROR << "Relay created " << relays.size() << EndLine;
     return relays;
 }
 
@@ -81,5 +83,6 @@ RelayBuilder &RelayBuilder::duration(uint16_t seconds)
 }
 
 RelayCollectionBuilder* RelayBuilder::done() {
+    logger << LOG_ERROR << "Finishing to create relays, parent address = 0x" << INT_HEX << (size_t)parent << EndLine;
     return parent;
 }

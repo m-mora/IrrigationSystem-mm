@@ -89,7 +89,7 @@ void IrrigationSystem::InitDevices()
 {
     ScanI2CDevicesAndDumpTable ();
 
-    ioExpander.init(0x20);
+    ioExpander.init(0x38);
 
     TimeProviderRTC *rtcProvider = new TimeProviderRTC();
     if (rtcProvider->init())

@@ -5,12 +5,14 @@
 
 bool IOExpander::init(uint8_t address)
 {
-    bool retuVal = false;
-
     logger << LOG_DEBUG << "Initializing I2C IOExpander with address 0x" << INT_HEX << address << EndLine;
     i2cDevice.setAddress(address);
 
-    return retuVal;
+    bool success = i2cDevice.isConnected();
+    if (!success) {
+        logger << LOG_ERROR << "Can't initialize RTC device..." << EndLine;
+    }
+    return success;
 }
 
 bool IOExpander::write(IOActionPin_e position, bool state)
