@@ -35,7 +35,7 @@ class IrrigationSystem {
     //
     LinkedList<ITimeProvider*> timeProviders;
     IOExpander ioExpander;
-    LinkedList<IORelay*> relays;
+    LinkedList<IORelay*> *relays;
 
     //
     // Private methods

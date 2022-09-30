@@ -3,7 +3,8 @@
 
 RelayCollectionBuilder::RelayCollectionBuilder()
 {
-    relays.clear();
+    relays = new LinkedList<IORelay*>();
+    relays->clear();
 }
 
 RelayCollectionBuilder &RelayCollectionBuilder::setExpander(IOExpander *expander)
@@ -30,9 +31,9 @@ RelayBuilder RelayCollectionBuilder::forPin(IOActionPin_e position)
     return RelayBuilder(position, this);
 }
 
-LinkedList<IORelay*> RelayCollectionBuilder::build()
+LinkedList<IORelay*> *RelayCollectionBuilder::build()
 {
-    logger << LOG_INFO << "Relay created " << relays.size() << EndLine;
+    logger << LOG_INFO << "Relay created " << relays->size() << EndLine;
     return relays;
 }
 
@@ -49,7 +50,7 @@ RelayBuilder RelayBuilder::forPin(IOActionPin_e position)
     if (parent == NULL) {
         logger << LOG_ERROR << "Trying to build relay without parent collection" << EndLine;
     }
-    parent->relays.add(build());
+    parent->relays->add(build());
     return parent->forPin(position);
 }
 
@@ -84,6 +85,6 @@ RelayBuilder &RelayBuilder::duration(uint16_t seconds)
 
 RelayCollectionBuilder* RelayBuilder::done() {
     logger << LOG_INFO << "Finishing to create relays, parent address = 0x" << INT_HEX << (size_t)parent << EndLine;
-    parent->relays.add(build());
+    parent->relays->add(build());
     return parent;
 }

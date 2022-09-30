@@ -48,14 +48,14 @@ void IrrigationSystem::init()
             logger << LOG_INFO << "Updating time..." << EndLine;
             timeProviders[0]->update(); // Change of time provider dinamically...
             logger << LOG_INFO << "Updating relay status..." << EndLine;
-            _for_each(relays, relay, IORelay *)
-            {
-                if (relay == NULL) {
-                    logger << LOG_WARN << "Found NULL instances while updating relays" << EndLine;
-                    continue;
-                }
-                relay->update();
-            }
+            // _for_each(relays, relay, IORelay *)
+            // {
+            //     if (relay == NULL) {
+            //         logger << LOG_WARN << "Found NULL instances while updating relays" << EndLine;
+            //         continue;
+            //     }
+            //     relay->update();
+            // }
         });
     }
 }

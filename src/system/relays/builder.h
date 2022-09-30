@@ -28,7 +28,7 @@ class RelayBuilder;
 
 class RelayCollectionBuilder
 {
-    LinkedList<IORelay*> relays;
+    LinkedList<IORelay*> *relays;
     IOExpander *expander;
     ITimeProvider *timeProvider;
     SystemData_t *sysData;
@@ -48,7 +48,7 @@ public:
     RelayCollectionBuilder &setSystemData(SystemData_t *sysData);
     RelayBuilder forPin(IOActionPin_e position);
 
-    LinkedList<IORelay*> build();
+    LinkedList<IORelay*> *build();
 };
 
 class RelayBuilder
