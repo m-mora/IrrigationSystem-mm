@@ -26,7 +26,7 @@
 #include "time/services/rtc.h"
 #include "utils/list.h"
 
-#define KERNEL_VERSION "0.1.0"
+#define KERNEL_VERSION "0.1.1"
 #define KERNEL_SERIAL_SPEED 115200
 
 class IrrigationSystem {
@@ -46,6 +46,8 @@ class IrrigationSystem {
     void InitDevices();
     void InitSensors();
     void InitRelays();
+
+    void ScanI2CDevicesAndDumpTable();
 
     //
     // Data members

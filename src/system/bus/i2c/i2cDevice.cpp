@@ -2,12 +2,6 @@
 #include <Arduino.h>
 #include <stdint.h>
 
-void I2CDevice::init(uint8_t address)
-{
-    ADDR = address;
-    Wire.begin(); // Configuring ESP as I2C controller
-}
-
 bool I2CDevice::writeByte(uint8_t data)
 {
     uint8_t error = 0;

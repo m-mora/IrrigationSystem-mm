@@ -22,7 +22,9 @@ class I2CDevice
     uint8_t ADDR; // Address I2C value 7bits format
 
 public:
-    void init(uint8_t address);
+    I2CDevice() : ADDR(0) {}
+
+    void setAddress(uint8_t addr) { ADDR = addr; }
 
     bool writeByte(uint8_t data);
     bool writeWord(uint16_t data);
@@ -30,4 +32,11 @@ public:
     uint8_t readByte(uint8_t regNum);
 
     uint8_t getAddress() const { return ADDR; }
+
+    bool isConnected()
+    {
+        Wire.beginTransmission(ADDR);
+        uint8_t error = Wire.endTransmission();
+        return error == 0;
+    }
 };

@@ -8,7 +8,7 @@ bool IOExpander::init(uint8_t address)
     bool retuVal = false;
 
     logger << LOG_DEBUG << "Initializing I2C IOExpander with address " << address << EndLine;
-    i2cDevice.init(address);
+    i2cDevice.setAddress(address);
 
     return retuVal;
 }
