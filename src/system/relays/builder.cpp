@@ -1,4 +1,5 @@
 #include "builder.h"
+#include "utils/logger.h"
 
 RelayCollectionBuilder::RelayCollectionBuilder()
 {
@@ -43,6 +44,9 @@ RelayBuilder::RelayBuilder(IOActionPin_e position, RelayCollectionBuilder *paren
 
 RelayBuilder RelayBuilder::forPin(IOActionPin_e position)
 {
+    if (parent == NULL) {
+        logger << LOG_ERROR << "Trying to build relay without parent collection" << EndLine;
+    }
     parent->relays.add(build());
     return parent->forPin(position);
 }

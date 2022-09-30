@@ -33,6 +33,7 @@ void IrrigationSystem::init()
     InitLogger();
     DumpSysInfo();
 
+    logger << LOG_INFO << "Initializing System..." << EndLine;
     InitWifi();
     InitDevices();
     InitSensors();
@@ -103,21 +104,23 @@ void IrrigationSystem::InitSensors()
 
 void IrrigationSystem::InitRelays()
 {
+    logger << LOG_INFO << "Creating relay configurations" << EndLine;
     // TODO: Create a flexible interface for relay building from eeprom?
     relays = RelayCollectionBuilder::create()
                  .setExpander(&ioExpander)
                  .setSystemData(&Status)
                  .setTimeProvider(timeProviders[0]) // Change of time provider dinamically...
                  .forPin(IO_0)
-                 .onDay(DAYS_PER_WEEK)
-                 .onTime(23, 0, 0)
-                 .duration(20)
+                    .onDay(DAYS_PER_WEEK)
+                    .onTime(23, 0, 0)
+                    .duration(20)
                  .forPin(IO_1)
-                 .onDay(MONDAY)
-                 .onDay(WENSDAY)
-                 .onTime(22, 0, 0)
-                 .done()
+                    .onDay(MONDAY)
+                    .onDay(WENSDAY)
+                    .onTime(22, 0, 0)
+                .done()
                  ->build();
+    logger << LOG_INFO << LOGGER_TEXT_GREEN << "Done!" << EndLine;
 }
 
 void IrrigationSystem::ScanI2CDevicesAndDumpTable()

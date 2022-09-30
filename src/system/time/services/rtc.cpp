@@ -1,4 +1,5 @@
 #include "rtc.h"
+#include "utils/logger.h"
 
 TimeProviderRTC::TimeProviderRTC(){}
 
@@ -9,9 +10,9 @@ TimeProviderRTC::TimeProviderRTC(){}
  * @return false On failure
  */
 bool TimeProviderRTC::init() {
+    logger << LOG_INFO << "Initializing RTC..." << EndLine;
     if (! rtc.begin()) {
-        Serial.println("Couldn't find RTC");
-        Serial.flush();
+        logger << LOG_ERROR << "Can't initialize RTC" << EndLine;
         return false;
     }
     return true;

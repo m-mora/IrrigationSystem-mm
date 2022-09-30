@@ -1,5 +1,6 @@
 #include "ntp.h"
 #include "utils/time_converter.h"
+#include "utils/logger.h"
 
 TimeProviderNTP::TimeProviderNTP() : timeClient(ntpUDP) {}
 
@@ -11,6 +12,7 @@ TimeProviderNTP::TimeProviderNTP() : timeClient(ntpUDP) {}
  */
 bool TimeProviderNTP::init()
 {
+    logger << LOG_INFO << "Initializing NTP..." << EndLine;
     timeClient.begin();
     timeClient.update();
     return true;
