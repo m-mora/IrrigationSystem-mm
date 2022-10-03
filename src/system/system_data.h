@@ -15,27 +15,18 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
-#if !defined(__IRRIGATION_SYSTEM_CORE_H__)
-#define __IRRIGATION_SYSTEM_CORE_H__
+#if !defined(__IRRIGATION_SYSTEM_DATA_H__)
+#define __IRRIGATION_SYSTEM_DATA_H__
 
-#include "system/time/itime_provider.h"
+typedef struct {
+    struct {
+        bool isRaining;
+        bool isAnyValveOn;
+        bool isPresenceDetected;
+        float humidityLevel;
+    } Sensors;
 
-#define KERNEL_VERSION "0.1.0"
+    uint32_t sysMilliseconds;
+} SystemData_t;
 
-class IrrigationSystem {
-    //
-    // Components
-    //
-    ITimeProvider* timeProvider;
-
-    //
-    // Private methods
-    //
-    void DumpSysInfo();
-
-public:
-    IrrigationSystem();
-    void init();
-};
-
-#endif // __IRRIGATION_SYSTEM_CORE_H__
+#endif // __IRRIGATION_SYSTEM_DATA_H__

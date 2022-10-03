@@ -1,26 +1,18 @@
 #include <Arduino.h>
 #include "io_expander.h"
 #include <stdint.h>
+#include "utils/logger.h"
 
 bool IOExpander::init(uint8_t address)
 {
-    bool retuVal = false;
+    logger << LOG_DEBUG << "Initializing I2C IOExpander with address 0x" << INT_HEX << address << EndLine;
+    i2cDevice.setAddress(address);
 
-    ADDR = address;    
-
-    i2cDevice.init(ADDR);   
-
-
-    Serial.print("****Configuration of IOExpander PCA9554***\n");
-    Serial.print("Configurating Reg3: Configuration Register\n");
-    i2cDevice.writeWord(PCA9554_CONFIG_REG3,0x00);
-
-    // Safe State: Configuring all outputs to zero volts
-    Serial.print("Configurating Reg1: Configuration Register\n");
-    retuVal = i2cDevice.writeWord(PCA9554_OUTPUT_REG1,0x00);    
-
-
-    return retuVal;
+    bool success = i2cDevice.isConnected();
+    if (!success) {
+        logger << LOG_ERROR << "Can't initialize RTC device..." << EndLine;
+    }
+    return success;
 }
 
 bool IOExpander::write(IOActionPin_e position, bool state)
@@ -44,7 +36,7 @@ bool IOExpander::write(IOActionPin_e position, bool state)
         mask = ~(1 << position);
         newOutputSt = currOutputSt & mask;
     }
-    error_N = i2cDevice.writeWord(PCA9554_OUTPUT_REG1, newOutputSt);
+    error_N = i2cDevice.writeWord(PCA9554_OUTPUT_REG1 | (newOutputSt << 8));
 
     return error_N;
 }

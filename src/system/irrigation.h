@@ -15,17 +15,47 @@
  * Letś have Fun!!                                                      *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#if !defined(__IRRIGATION_SYSTEM_H__)
+#define __IRRIGATION_SYSTEM_H__
 
-#include <Arduino.h>
+#include "system/time/itime_provider.h"
+#include "system_data.h"
+#include "system/relays/io_expander.h"
+#include "system/relays/io_relay.h"
+#include "time/services/ntp.h"
+#include "time/services/rtc.h"
+#include "utils/list.h"
 
-#include "system/irrigation.h"
+#define KERNEL_VERSION "0.1.2"
+#define KERNEL_SERIAL_SPEED 115200
 
-IrrigationSystem iSys;
+class IrrigationSystem {
+    //
+    // Components
+    //
+    LinkedList<ITimeProvider*> timeProviders;
+    IOExpander ioExpander;
+    LinkedList<IORelay*> *relays;
 
-void setup() {
-    iSys.init();
-}
+    //
+    // Private methods
+    //
+    void DumpSysInfo();
+    void InitLogger();
+    void InitWifi();
+    void InitDevices();
+    void InitSensors();
+    void InitRelays();
 
-void loop() {
+    void ScanI2CDevicesAndDumpTable();
 
-}
+    //
+    // Data members
+    //
+    SystemData_t Status;
+public:
+    IrrigationSystem();
+    void init();
+};
+
+#endif // __IRRIGATION_SYSTEM_H__

@@ -19,14 +19,37 @@
 #define __IRRIGATION_SYSTEM_TIME_H__
 
 #include <stdint.h>
+#include <Arduino.h>
+#include <RTClib.h>
 
-typedef struct {
-    uint8_t year;
-    uint8_t month;
-    uint8_t day;
-    uint8_t hour;
-    uint8_t minute;
-    uint8_t second;
-} datetime_t;
+typedef enum {
+  SUNDAY = 0,
+  MONDAY = 1,
+  TUESDAY = 2,
+  WENSDAY = 3,
+  THURSDAY = 4,
+  FRIDAY = 5,
+  SATURNDAY = 6,
+  DAYS_PER_WEEK = 7
+} WeekDays_e;
+
+struct Time_s {
+  uint16_t year;
+  uint8_t month;
+  uint8_t day;
+  uint8_t hour;
+  uint8_t minute;
+  uint8_t second;
+  
+  Time_s() { }
+  Time_s(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second);
+  Time_s(DateTime time);
+
+  String toString() const;
+  void toCharArray(char *buff) const;
+  DateTime toDateTime() const;
+  bool operator==(Time_s&);
+};
+typedef struct Time_s Time_s;
 
 #endif // __IRRIGATION_SYSTEM_TIME_H__

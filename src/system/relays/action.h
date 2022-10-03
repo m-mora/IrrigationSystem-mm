@@ -23,7 +23,7 @@
 class IOAction {
 protected:
     IOExpander *device;
-    IOActionPin_e bit;
+    IOActionPin_e position;
     bool state;
 public:
     /**
@@ -32,7 +32,7 @@ public:
      * @param position IO Position on the expander.
      */
     IOAction(IOActionPin_e position)
-        : device(nullptr), bit(position), state(false) {}
+        : device(nullptr), position(position), state(false) {}
 
     /**
      * @brief Initializes the IOAction
@@ -55,7 +55,9 @@ public:
      * 
      * @param expander Pointer to IO Expander object.
      */
-    void attach_expander (IOExpander* expander);
+    void attach_expander (IOExpander* expander) {
+        device = expander;
+    }
 
     /**
      * @brief Returns the state.

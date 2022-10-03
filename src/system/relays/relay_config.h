@@ -18,8 +18,35 @@
 #if !defined(__IRRIGATION_SYSTEM_RELAYS_CONFIGURATION_H__)
 #define __IRRIGATION_SYSTEM_RELAYS_CONFIGURATION_H__
 
+#include "system/time/datetime.h"
+#include "system/time/itime_provider.h"
+#include "system/system_data.h"
+
 typedef struct {
-    
+    //
+    // Pointers to access system structures
+    //
+    ITimeProvider *timeProvider;
+    SystemData_t *systemData;
+
+    //
+    // Info for relay
+    //
+    Time_s timeToTurnOn;
+    uint16_t turnOnDuration;
+    union {
+        struct {
+            uint8_t sunday      : 1;
+            uint8_t monday      : 1;
+            uint8_t tuesday     : 1;
+            uint8_t wensday     : 1;
+            uint8_t thursday    : 1;
+            uint8_t friday      : 1;
+            uint8_t saturnday   : 1;
+            uint8_t _           : 1;
+        } Days;
+        uint8_t Data;
+    } WeekDaysToTurnOn;
 } IORelayConfig_t;
 
 #endif // __IRRIGATION_SYSTEM_RELAYS_CONFIGURATION_H__

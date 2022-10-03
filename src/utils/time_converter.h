@@ -28,6 +28,6 @@
  * 
  * @return Return date in time
  */
-datetime_t getDateTimeFromEpochTime(unsigned long epoch);
+Time_s getDateTimeFromEpochTime(unsigned long epoch);
 
 #endif // __UTILS_TIME_CONVERTER__

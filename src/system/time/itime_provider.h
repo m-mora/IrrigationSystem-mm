@@ -22,7 +22,7 @@
 
 class ITimeProvider {
 protected:
-    datetime_t datetime;
+    Time_s datetime;
 public:
     /**
      * @brief Initialize the time provider.
@@ -43,9 +43,9 @@ public:
     /**
      * @brief Returns a copy of the internal datetime.
      * 
-     * @return datetime_t Last updated datetime.
+     * @return Time_s Last updated datetime.
      */
-    datetime_t get() const { return datetime; }
+    Time_s get() const { return datetime; }
 };
 
 #endif // __IRRIGATION_SYSTEM_TIME_INTERFACE_H__
