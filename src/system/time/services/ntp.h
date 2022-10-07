@@ -26,6 +26,7 @@ class TimeProviderNTP : public ITimeProvider
 {
     WiFiUDP ntpUDP;
     NTPClient timeClient;
+    bool UpdateNtp();
 public:
     TimeProviderNTP();
     /**
