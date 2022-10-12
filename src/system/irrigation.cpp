@@ -47,18 +47,18 @@ void IrrigationSystem::init()
         doUntilTimeElapsed(__update_rtc_handler, 1000, {
             logger << LOG_INFO << "Updating time..." << EndLine;
             timeProviders[0]->update(); // Change of time provider dinamically...
-            logger << LOG_INFO << "Readed time: " << timeProviders[0]->get().toString() << EndLine;
+            logger << LOG_INFO << "Readed time:  " << timeProviders[0]->get().toString() << EndLine;
             logger << LOG_INFO << "Updating relay status..." << EndLine;
-            IORelay *relay = NULL;
-            for (size_t i = 0; i < relays->size(); i++) {
-                relay = relays->get(i);
-                if (relay == NULL) {
-                    logger << LOG_WARN << "Found NULL instances while updating relays" << EndLine;
-                    continue;
-                }
-                relay->update();
-            }
-            logger << LOG_INFO << "Relays status updated!" << EndLine;
+//            IORelay *relay = NULL;
+//            for (size_t i = 0; i < relays->size(); i++) {
+//                relay = relays->get(i);
+//                if (relay == NULL) {
+//                    logger << LOG_WARN << "Found NULL instances while updating relays" << EndLine;
+//                    continue;
+//                }
+//                relay->update();
+//            }
+//            logger << LOG_INFO << "Relays status updated!" << EndLine;
         });
     }
 }

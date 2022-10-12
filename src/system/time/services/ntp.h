@@ -22,11 +22,14 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
+#define NTP_ATTMPS  5
+#define UTC_DATE    1665179521  // 1665179521 =  Friday, 7 October 2022 12:00:00 AM
+
 class TimeProviderNTP : public ITimeProvider
 {
     WiFiUDP ntpUDP;
     NTPClient timeClient;
-    bool UpdateNtp();
+    bool UpdateNTP();
 public:
     TimeProviderNTP();
     /**
