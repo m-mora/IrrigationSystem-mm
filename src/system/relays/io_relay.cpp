@@ -8,6 +8,11 @@ void IORelay::set_config(IORelayConfig_t new_config)
 
 void IORelay::update()
 {
+    if (device == NULL)
+    {
+        logger << LOG_ERROR << "Device pointer is NULL" << EndLine;
+        return;
+    }
     if (isRelayOn && isTurnOnDurationTimeOver())
     {
         turnOffRelay();
@@ -32,7 +37,6 @@ bool IORelay::isMomentToTurnOn()
     bool isTime = false;
     Time_s now = config.timeProvider->get();
     uint8_t dayOfWeek = now.toDateTime().dayOfTheWeek();
-
     // Check is today on the list of days?
     isTime = (config.WeekDaysToTurnOn.Data & (1 << dayOfWeek)) != 0;
     logger << LOG_DEBUG << "isMomentToTurnOn: isDay? " << isTime << EndLine;
@@ -46,8 +50,8 @@ bool IORelay::isMomentToTurnOn()
         turnOnTime.day = now.day;
         TimeSpan deltaTime = now.toDateTime() - turnOnTime.toDateTime();
 
-        isTime = deltaTime.totalseconds() <= 5;
-        logger << LOG_DEBUG << "isMomentToTurnOn: isTime? " << isTime << ", rest seconds: " << deltaTime.totalseconds() << EndLine;
+        isTime = abs(deltaTime.totalseconds()) <= 5;
+        logger << LOG_DEBUG << "isMomentToTurnOn: isTime? " << isTime << ", rest seconds: " << abs(deltaTime.totalseconds()) << EndLine;
     }
 
     // Check is any other relay on?
@@ -55,7 +59,7 @@ bool IORelay::isMomentToTurnOn()
     {
         isTime = false;
     }
-    logger << LOG_DEBUG << "isMomentToTurnOn: any other relay is on? " << isTime << EndLine;
+    logger << LOG_DEBUG << "isMomentToTurnOn: any other relay is on? " << config.systemData->Sensors.isAnyValveOn << EndLine;
 
     return isTime;
 }

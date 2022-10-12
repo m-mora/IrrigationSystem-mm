@@ -37,13 +37,17 @@ bool TimeProviderNTP::update()
 {
     this->datetime = {0, 0, 0, 0, 0, 0};
     
-    if(this->updateNTP())
+    if(!this->updateNTP())
     {
         return false;
     }
-
-    datetime = getDateTimeFromEpochTime(timeClient.getEpochTime());
-    logger << LOG_DEBUG << "Get Time " << datetime.toString() << EndLine;
+    DateTime _dateTime = DateTime(timeClient.getEpochTime());
+    datetime.year = _dateTime.year();
+    datetime.month = _dateTime.month();
+    datetime.day = _dateTime.day();
+    datetime.hour = _dateTime.hour();
+    datetime.minute = _dateTime.minute();
+    datetime.second = _dateTime.second();
 
     return true;
 }
@@ -62,7 +66,11 @@ bool TimeProviderNTP::updateUTCTime()
 bool TimeProviderNTP::updateNTP()
 {
     bool success = false;
-    logger << LOG_DEBUG << "Conection status: " << WiFi.status() << EndLine;
+    if (WiFi.status() != WL_CONNECTED) 
+    {
+        logger << LOG_WARN << "Wifi disconnected " << EndLine;
+        return false;
+    }
 
     for(uint8 tries = 0; (tries < NTP_ATTMPS) && (!success); tries++)
     {
@@ -74,7 +82,5 @@ bool TimeProviderNTP::updateNTP()
         return false;
     }
 
-    logger << LOG_INFO << "Connection to NTP Server " << LOGGER_TEXT_GREEN << "SUCCESSFUL" << EndLine;
-    logger << LOG_DEBUG << "UTP read " << epochUtcTime << " Compared to: " << UTC_DATE << EndLine;
     return true;
 }

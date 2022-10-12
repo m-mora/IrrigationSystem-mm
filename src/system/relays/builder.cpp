@@ -15,7 +15,7 @@ RelayCollectionBuilder &RelayCollectionBuilder::setExpander(IOExpander *expander
 
 RelayCollectionBuilder &RelayCollectionBuilder::setTimeProvider(ITimeProvider *expander)
 {
-    this->timeProvider = timeProvider;
+    this->timeProvider = expander;
     return *this;
 }
 

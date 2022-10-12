@@ -45,20 +45,21 @@ void IrrigationSystem::init()
         Status.sysMilliseconds = millis();
 
         doUntilTimeElapsed(__update_rtc_handler, 1000, {
-            logger << LOG_INFO << "Updating time..." << EndLine;
             timeProviders[0]->update(); // Change of time provider dinamically...
-            logger << LOG_INFO << "Readed time:  " << timeProviders[0]->get().toString() << EndLine;
-            logger << LOG_INFO << "Updating relay status..." << EndLine;
-//            IORelay *relay = NULL;
-//            for (size_t i = 0; i < relays->size(); i++) {
-//                relay = relays->get(i);
-//                if (relay == NULL) {
-//                    logger << LOG_WARN << "Found NULL instances while updating relays" << EndLine;
-//                    continue;
-//                }
-//                relay->update();
-//            }
-//            logger << LOG_INFO << "Relays status updated!" << EndLine;
+            logger << LOG_DEBUG << (size_t)timeProviders[0] << EndLine;
+
+            logger << LOG_INFO << "Now:  " << timeProviders[0]->get().toString() << EndLine;
+            IORelay *relay = NULL;
+            for (size_t i = 0; i < relays->size(); i++)
+            {
+                relay = relays->get(i);
+                if (relay == NULL)
+                {
+                    logger << LOG_WARN << "Found NULL instances while updating relays" << EndLine;
+                    continue;
+                }
+                relay->update();
+            }
         });
     }
 }
@@ -95,15 +96,15 @@ void IrrigationSystem::InitWifi()
 
 void IrrigationSystem::InitDevices()
 {
-    ScanI2CDevicesAndDumpTable ();
+    ScanI2CDevicesAndDumpTable();
 
     ioExpander.init(0x38);
 
-    TimeProviderRTC *rtcProvider = new TimeProviderRTC();
-    if (rtcProvider->init())
-    {
-        timeProviders.add(rtcProvider);
-    }
+    // TimeProviderRTC *rtcProvider = new TimeProviderRTC();
+    // if (rtcProvider->init())
+    // {
+    //     timeProviders.add(rtcProvider);
+    // }
 }
 
 void IrrigationSystem::InitSensors()
@@ -119,14 +120,14 @@ void IrrigationSystem::InitRelays()
                  .setSystemData(&Status)
                  .setTimeProvider(timeProviders[0]) // Change of time provider dinamically...
                  .forPin(IO_0)
-                    .onDay(DAYS_PER_WEEK)
-                    .onTime(15, 51, 0)
-                    .duration(20)
+                 .onDay(DAYS_PER_WEEK)
+                 .onTime(3, 42, 0)
+                 .duration(20)
                  .forPin(IO_1)
-                    .onDay(DAYS_PER_WEEK)
-                    .onTime(15, 52, 0)
-                    .duration(30)
-                .done()
+                 .onDay(DAYS_PER_WEEK)
+                 .onTime(3, 43, 0)
+                 .duration(30)
+                 .done()
                  ->build();
     logger << LOG_INFO << LOGGER_TEXT_GREEN << "Done!" << EndLine;
 }
