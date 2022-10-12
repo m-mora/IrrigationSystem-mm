@@ -11,7 +11,7 @@ TimeProviderRTC::TimeProviderRTC(){}
  */
 bool TimeProviderRTC::init() {
     logger << LOG_INFO << "Initializing RTC..." << EndLine;
-    if (! rtc.begin()) {
+    if (!rtc.begin()) {
         logger << LOG_ERROR << "Can't initialize RTC" << EndLine;
         return false;
     }
@@ -26,7 +26,7 @@ bool TimeProviderRTC::init() {
  */
 bool TimeProviderRTC::update() {
     this->datetime = { 0, 0, 0, 0, 0, 0 };
-    DateTime now = rtc.now();
+    DateTime now    = rtc.now();
     datetime.year   = now.year();
     datetime.month  = now.month();
     datetime.day    = now.day();

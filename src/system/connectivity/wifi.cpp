@@ -1,5 +1,10 @@
 #include "wifi.h"
 #include "utils/logger.h"
+#ifdef ARDUINO_ESP8266_ESP12
+#include <ESP8266WiFi.h>
+#else
+#include <WiFi.h>
+#endif
 
 static WiFiManager wm;
 
