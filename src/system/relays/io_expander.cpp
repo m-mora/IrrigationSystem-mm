@@ -17,7 +17,7 @@ bool IOExpander::init(uint8_t address)
     //
     // Initialize all the pins as outputs
     //
-    i2cDevice.writeWord(PCA9554_CONFIG_REG3 | (0xFF << 8));
+    i2cDevice.writeWord(PCA9554_CONFIG_REG3);
 
     return success;
 }
