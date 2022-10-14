@@ -10,8 +10,15 @@ bool IOExpander::init(uint8_t address)
 
     bool success = i2cDevice.isConnected();
     if (!success) {
-        logger << LOG_ERROR << "Can't initialize RTC device..." << EndLine;
+        logger << LOG_ERROR << "Can't initialize IO Expander device..." << EndLine;
+        return false;
     }
+
+    //
+    // Initialize all the pins as outputs
+    //
+    i2cDevice.writeWord(PCA9554_CONFIG_REG3 | (0xFF << 8));
+
     return success;
 }
 
