@@ -21,7 +21,7 @@ bool IOExpander::write(IOActionPin_e position, bool state)
     // Reading current value out all output register (8 bits)
 
 
-    currOutputSt = i2cDevice.readByte(PCA9554_OUTPUT_REG1);     
+    currOutputSt = i2cDevice.readByte(PCA9554_OUTPUT_REG1);
     Serial.print(currOutputSt, BIN);
     Serial.print("\n\r");
 

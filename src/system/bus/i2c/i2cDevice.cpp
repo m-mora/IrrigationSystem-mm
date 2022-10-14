@@ -43,8 +43,8 @@ bool I2CDevice::writeWord(uint16_t word)
     bool retVal = false;
 
     Wire.beginTransmission(ADDR);
-    Wire.write(*bytes);
-    Wire.write(*(bytes++));
+    Wire.write(word & 0xFF);
+    Wire.write((word >> 8) & 0xFF);
     error = Wire.endTransmission();
 
     if (error == 0)
