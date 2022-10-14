@@ -22,8 +22,7 @@ bool IOExpander::write(IOActionPin_e position, bool state)
 
 
     currOutputSt = i2cDevice.readByte(PCA9554_OUTPUT_REG1);
-    Serial.print(currOutputSt, BIN);
-    Serial.print("\n\r");
+    Serial.println(currOutputSt, BIN);
 
     // Mask specific bit to be changed
     if (state)
@@ -37,6 +36,9 @@ bool IOExpander::write(IOActionPin_e position, bool state)
         newOutputSt = currOutputSt & mask;
     }
     error_N = i2cDevice.writeWord(PCA9554_OUTPUT_REG1 | (newOutputSt << 8));
+
+    currOutputSt = i2cDevice.readByte(PCA9554_OUTPUT_REG1);
+    Serial.println(currOutputSt, BIN);
 
     return error_N;
 }
