@@ -28,18 +28,25 @@ IrrigationSystem::IrrigationSystem()
     Status.Sensors.isRaining = false;
 }
 
-void IrrigationSystem::init()
+bool IrrigationSystem::init()
 {
     InitLogger();
     DumpSysInfo();
 
     logger << LOG_INFO << "Initializing System..." << EndLine;
     InitWifi();
+    ScanI2CDevicesAndDumpTable();
     InitDevices();
+    ConfigureTimeProviders();
     InitSensors();
     InitRelays();
     logger << LOG_INFO << "Initialization finished!" << EndLine;
 
+    return IsSystemInitializedAtMinimal();
+}
+
+void IrrigationSystem::run()
+{
     while (true)
     {
         Status.sysMilliseconds = millis();
@@ -87,24 +94,11 @@ void IrrigationSystem::InitLogger()
 void IrrigationSystem::InitWifi()
 {
     WifiInitialize();
-    TimeProviderNTP *ntpProvider = new TimeProviderNTP();
-    if (ntpProvider->init())
-    {
-        timeProviders.add(ntpProvider);
-    }
 }
 
 void IrrigationSystem::InitDevices()
 {
-    ScanI2CDevicesAndDumpTable();
-
     ioExpander.init(0x38);
-
-    // TimeProviderRTC *rtcProvider = new TimeProviderRTC();
-    // if (rtcProvider->init())
-    // {
-    //     timeProviders.add(rtcProvider);
-    // }
 }
 
 void IrrigationSystem::InitSensors()
@@ -118,16 +112,28 @@ void IrrigationSystem::InitRelays()
     relays = RelayCollectionBuilder::create()
                  .setExpander(&ioExpander)
                  .setSystemData(&Status)
-                 .setTimeProvider(timeProviders[0]) // Change of time provider dinamically...
+                 .setTimeProvider(timeProviders[0])
                  .forPin(IO_0)
                     .onDay(DAYS_PER_WEEK)
-                    .onTime(3, 42, 0)
+                    .onTime(13, 42, 0)
                     .duration(20)
                  .forPin(IO_1)
                     .onDay(DAYS_PER_WEEK)
-                    .onTime(3, 43, 0)
+                    .onTime(13, 43, 0)
                     .duration(30)
-                 .done()
+                 .forPin(IO_2)
+                    .onDay(DAYS_PER_WEEK)
+                    .onTime(13, 44, 0)
+                    .duration(35)
+                 .forPin(IO_3)
+                    .onDay(DAYS_PER_WEEK)
+                    .onTime(13, 45, 0)
+                    .duration(40)
+                 .forPin(IO_4)
+                    .onDay(DAYS_PER_WEEK)
+                    .onTime(13, 46, 0)
+                    .duration(45)
+                .done()
                  ->build();
     logger << LOG_INFO << LOGGER_TEXT_GREEN << "Done!" << EndLine;
 }
@@ -165,5 +171,41 @@ void IrrigationSystem::ScanI2CDevicesAndDumpTable()
 
         logger << buffer << F(" ");
     }
+
     logger << EndLine;
+}
+
+void IrrigationSystem::ConfigureTimeProviders()
+{
+    TryToRegisterTimeProvider<TimeProviderNTP>();
+    TryToRegisterTimeProvider<TimeProviderRTC>();
+
+    logger << LOG_INFO << "Registered time providers and priority: " << EndLine;
+    _for_each(timeProviders, _p, ITimeProvider *)
+    {
+        logger << LOG_INFO << " -> " << _p->getTypeName() << EndLine;
+    }
+}
+
+bool IrrigationSystem::IsSystemInitializedAtMinimal()
+{
+    if (timeProviders.size() == 0)
+    {
+        return false;
+    }
+
+    if (!ioExpander.isConnected())
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void IrrigationSystem::UpdateTimeProviders()
+{
+    _for_each(timeProviders, _tp, ITimeProvider *)
+    {
+        _tp->update();
+    }
 }

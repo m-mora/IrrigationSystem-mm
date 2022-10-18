@@ -26,7 +26,7 @@
 #include "time/services/rtc.h"
 #include "utils/list.h"
 
-#define KERNEL_VERSION "0.1.2"
+#define KERNEL_VERSION "0.2.0"
 #define KERNEL_SERIAL_SPEED 115200
 
 class IrrigationSystem {
@@ -46,8 +46,25 @@ class IrrigationSystem {
     void InitDevices();
     void InitSensors();
     void InitRelays();
+    void ConfigureTimeProviders();
 
     void ScanI2CDevicesAndDumpTable();
+
+    template <typename Tprovider>
+    bool TryToRegisterTimeProvider () {
+        Tprovider *p = new Tprovider();
+        if (!p->init())
+        {
+            delete p;
+            return false;
+        }
+        timeProviders.add(p);
+        return true;
+    }
+
+    bool IsSystemInitializedAtMinimal ();
+
+    void UpdateTimeProviders ();
 
     //
     // Data members
@@ -55,7 +72,8 @@ class IrrigationSystem {
     SystemData_t Status;
 public:
     IrrigationSystem();
-    void init();
+    bool init();
+    void run();
 };
 
 #endif // __IRRIGATION_SYSTEM_H__

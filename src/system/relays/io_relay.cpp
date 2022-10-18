@@ -54,7 +54,7 @@ bool IORelay::isMomentToTurnOn()
     TimeSpan deltaTime = now.toDateTime() - turnOnTime.toDateTime();
 
     isTime = abs(deltaTime.totalseconds()) <= 5;
-    logger << LOG_DEBUG << "isMomentToTurnOn: isTime? " << isTime << ", rest seconds: " << abs(deltaTime.totalseconds()) << EndLine;
+    logger << LOG_DEBUG << "isMomentToTurnOn: isTime? " << isTime << ", rest seconds: " << deltaTime.totalseconds() << EndLine;
 
     if (!isTime) {
         return isTime;

@@ -46,6 +46,8 @@ public:
      * @return Time_s Last updated datetime.
      */
     Time_s get() const { return datetime; }
+
+    virtual const char* getTypeName () const = 0;
 };
 
 #endif // __IRRIGATION_SYSTEM_TIME_INTERFACE_H__

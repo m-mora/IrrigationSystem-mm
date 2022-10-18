@@ -47,6 +47,10 @@ public:
      * @return false On failure
      */
     bool update();
+
+    const char* getTypeName () const {
+        return "RTC";
+    }
 };
 
 

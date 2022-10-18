@@ -19,11 +19,17 @@
 #include <Arduino.h>
 
 #include "system/irrigation.h"
+#include "utils/logger.h"
 
 IrrigationSystem iSys;
 
 void setup() {
-    iSys.init();
+    if (!iSys.init()) {
+        logger << LOG_ERROR << "Setup failied! can't run irrigation system" << EndLine;
+        while (1) ;
+    }
+
+    iSys.run();
 }
 
 void loop() {
