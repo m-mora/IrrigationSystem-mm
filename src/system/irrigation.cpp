@@ -98,7 +98,9 @@ void IrrigationSystem::InitWifi()
 
 void IrrigationSystem::InitDevices()
 {
-    ioExpander.init(0x38);
+    if (!ioExpander.init(0x38)) {
+        logger << LOG_ERROR << "Cant't initialize IO Expander" << EndLine;
+    }
 }
 
 void IrrigationSystem::InitSensors()

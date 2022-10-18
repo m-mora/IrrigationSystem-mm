@@ -17,7 +17,18 @@ bool IOExpander::init(uint8_t address)
     //
     // Initialize all the pins as outputs
     //
-    return i2cDevice.writeWord(PCA9554_CONFIG_REG3);
+    logger << LOG_ERROR << "Configuring expander as output" << EndLine;
+    if (!i2cDevice.writeWord(PCA9554_CONFIG_REG3)) {
+        return false;
+    }
+
+    logger << LOG_ERROR << "Configuring outputs to LOW" << EndLine;
+    if (!i2cDevice.writeWord(PCA9554_OUTPUT_REG1)) {
+        return false;
+    }
+
+    logger << LOG_ERROR << "IO Expander configuration " << LOGGER_TEXT_GREEN << "success!" << EndLine;
+    return true;
 }
 
 bool IOExpander::write(IOActionPin_e position, bool state)
