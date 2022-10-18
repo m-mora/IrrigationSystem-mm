@@ -49,7 +49,7 @@ public:
     bool update();
 
     const char* getTypeName () const {
-        return "RTC";
+        return "NTP";
     }
 };
 
