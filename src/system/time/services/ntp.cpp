@@ -54,7 +54,7 @@ bool TimeProviderNTP::update()
 
 bool TimeProviderNTP::updateUTCTime()
 {
-    bool success = timeClient.update();
+    bool success = timeClient.forceUpdate();
     if (!success) {
         return false;
     }
