@@ -36,11 +36,13 @@ bool TimeProviderNTP::init()
 bool TimeProviderNTP::update()
 {
     this->datetime = {0, 0, 0, 0, 0, 0};
+    bool status ;
     
-    if(!this->updateNTP())
-    {
-        return false;
-    }
+    status = this->updateNTP();
+    // if(!this->updateNTP())
+    // {
+    //     return false;
+    // }
     DateTime _dateTime = DateTime(timeClient.getEpochTime());
     datetime.year = _dateTime.year();
     datetime.month = _dateTime.month();
@@ -49,12 +51,16 @@ bool TimeProviderNTP::update()
     datetime.minute = _dateTime.minute();
     datetime.second = _dateTime.second();
 
-    return true;
+    if (status) 
+    {
+        return true;
+    }
+    return false;
 }
 
 bool TimeProviderNTP::updateUTCTime()
 {
-    bool success = timeClient.forceUpdate();
+    bool success = timeClient.update();
     if (!success) {
         return false;
     }
