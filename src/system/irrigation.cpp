@@ -179,12 +179,7 @@ void IrrigationSystem::ConfigureTimeProviders()
     timeProviders.TryToRegisterTimeProvider<TimeProviderNTP>();
     timeProviders.TryToRegisterTimeProvider<TimeProviderRTC>();
 
-    logger << LOG_INFO << "Registered time providers and priority: " << EndLine;
-    LinkedList<const char*> names = timeProviders.getNames();
-    _for_each(names, _n, const char*)
-    {
-        logger << LOG_INFO << " - " << *_n << EndLine;
-    }
+    timeProviders.init();
 }
 
 bool IrrigationSystem::IsSystemInitializedAtMinimal()

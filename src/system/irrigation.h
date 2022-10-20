@@ -25,6 +25,7 @@
 #include "time/services/ntp.h"
 #include "time/services/rtc.h"
 #include "utils/list.h"
+#include "utils/logger.h"
 
 #define KERNEL_VERSION "0.2.1"
 #define KERNEL_SERIAL_SPEED 115200
@@ -60,6 +61,7 @@ public:
     bool init() {
         bool success = true;
         uint8_t index = 0;
+        logger << LOG_INFO << "Initializing Time Providers" << EndLine;
         _for_each(providers, _tp, ITimeProvider *)
         {
             if (!_tp->init())
@@ -67,7 +69,9 @@ public:
                 delete _tp;
                 providers.remove(index);
                 success = false;
+                logger << LOG_ERROR << "  - Init " << _tp->getTypeName() << LOGGER_TEXT_RED << " Failure!" << EndLine;
             } else {
+                logger << LOG_INFO << "  - Init " << _tp->getTypeName() << LOGGER_TEXT_GREEN << " Success" << EndLine;
                 index++;
             }
         }
