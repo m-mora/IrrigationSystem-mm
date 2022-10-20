@@ -9,7 +9,7 @@
 #define NTP_ADDRESS  "pool.ntp.org"  // URL NTP Server
 
 #define NTP_ATTMPS  5
-#define UTC_DATE    1665179521  // 1665179521 =  Friday, 7 October 2022 12:00:00 AM
+#define UTC_DATE    getBuildTimeAsUnixTime (__DATE__, __TIME__)
 
 TimeProviderNTP::TimeProviderNTP() : timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL) {}
 
@@ -39,10 +39,7 @@ bool TimeProviderNTP::update()
     bool status ;
     
     status = this->updateNTP();
-    // if(!this->updateNTP())
-    // {
-    //     return false;
-    // }
+
     DateTime _dateTime = DateTime(timeClient.getEpochTime());
     datetime.year = _dateTime.year();
     datetime.month = _dateTime.month();

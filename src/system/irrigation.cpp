@@ -78,7 +78,8 @@ void IrrigationSystem::DumpSysInfo()
            << "           | |\\  \\| |_____| |_| \\__/\\      \n"
            << "           \\_| \\_/\\_____/\\___/ \\____/     \n"
            << "--------------------------------------------------------\n"
-           << LOG_MASTER << "Fimware version: " << KERNEL_VERSION << EndLine << LOG_MASTER << "Build date: " << __DATE__ << " " << __TIME__ << EndLine;
+           << LOG_MASTER << "Fimware version: " << KERNEL_VERSION << EndLine
+           << LOG_MASTER << "Build date: " << Time_s(getBuildTime(__DATE__, __TIME__)).toString() << EndLine;
 }
 
 void IrrigationSystem::InitLogger()

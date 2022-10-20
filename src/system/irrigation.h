@@ -85,11 +85,13 @@ public:
             logger << LOG_DEBUG << "Updating " << _tp->getTypeName() << EndLine;
             bool status = _tp->update();
             if (status) {
-                datetime = _tp->get();
-                anySucess = true;
                 logger << LOG_DEBUG << LOGGER_TEXT_GREEN << "Success!" << EndLine;
+                if (!anySucess) {
+                    datetime = _tp->get();
+                }
+                anySucess = true;
             } else {
-                logger << LOG_ERROR << LOGGER_TEXT_RED << "Error updating time provider!" << EndLine;
+                logger << LOG_ERROR << "Error while updating time provider!" << EndLine;
                 if (anySucess) {
                     _tp->set(datetime);
                 }
