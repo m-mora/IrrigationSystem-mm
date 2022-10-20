@@ -59,12 +59,16 @@ public:
 
     bool init() {
         bool success = true;
+        uint8_t index = 0;
         _for_each(providers, _tp, ITimeProvider *)
         {
             if (!_tp->init())
             {
                 delete _tp;
+                providers.remove(index);
                 success = false;
+            } else {
+                index++;
             }
         }
         return success;
@@ -74,11 +78,17 @@ public:
         bool anySucess = false;
         _for_each(providers, _tp, ITimeProvider *)
         {
-            if (_tp->update()) {
+            logger << LOG_DEBUG << "Updating " << _tp->getTypeName() << EndLine;
+            bool status = _tp->update();
+            if (status) {
                 datetime = _tp->get();
                 anySucess = true;
-            } else if (anySucess) {
-                _tp->set(datetime);
+                logger << LOG_DEBUG << LOGGER_TEXT_GREEN << "Success!" << EndLine;
+            } else {
+                logger << LOG_ERROR << LOGGER_TEXT_RED << "Error updating time provider!" << EndLine;
+                if (anySucess) {
+                    _tp->set(datetime);
+                }
             }
         }
         return anySucess;
