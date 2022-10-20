@@ -21,7 +21,6 @@ SysLogger logger(nullptr);
 
 IrrigationSystem::IrrigationSystem()
 {
-    timeProviders.clear();
     Status.Sensors.humidityLevel = 0.0f;
     Status.Sensors.isAnyValveOn = false;
     Status.Sensors.isPresenceDetected = false;
@@ -52,12 +51,10 @@ void IrrigationSystem::run()
         Status.sysMilliseconds = millis();
 
         doUntilTimeElapsed(__update_rtc_handler, 1000, {
-            timeProviders[0]->update(); // Change of time provider dinamically...
-            logger << LOG_DEBUG << (size_t)timeProviders[0] << EndLine;
-
-            logger << LOG_INFO << "Now:  " << timeProviders[0]->get().toString() << EndLine;
+            timeProviders.update();
+            logger << LOG_INFO << "Now:  " << timeProviders.get().toString() << EndLine;
             IORelay *relay = NULL;
-            for (size_t i = 0; i < relays->size(); i++)
+            for (int i = 0; i < relays->size(); i++)
             {
                 relay = relays->get(i);
                 if (relay == NULL)
@@ -114,7 +111,7 @@ void IrrigationSystem::InitRelays()
     relays = RelayCollectionBuilder::create()
                  .setExpander(&ioExpander)
                  .setSystemData(&Status)
-                 .setTimeProvider(timeProviders[0])
+                 .setTimeProvider(&timeProviders)
                  .forPin(IO_0)
                     .onDay(DAYS_PER_WEEK)
                     .onTime(13, 42, 0)
@@ -179,19 +176,20 @@ void IrrigationSystem::ScanI2CDevicesAndDumpTable()
 
 void IrrigationSystem::ConfigureTimeProviders()
 {
-    TryToRegisterTimeProvider<TimeProviderNTP>();
-    TryToRegisterTimeProvider<TimeProviderRTC>();
+    timeProviders.TryToRegisterTimeProvider<TimeProviderNTP>();
+    timeProviders.TryToRegisterTimeProvider<TimeProviderRTC>();
 
     logger << LOG_INFO << "Registered time providers and priority: " << EndLine;
-    _for_each(timeProviders, _p, ITimeProvider *)
+    LinkedList<const char*> names = timeProviders.getNames();
+    _for_each(names, _n, const char*)
     {
-        logger << LOG_INFO << " -> " << _p->getTypeName() << EndLine;
+        logger << LOG_INFO << " - " << *_n << EndLine;
     }
 }
 
 bool IrrigationSystem::IsSystemInitializedAtMinimal()
 {
-    if (timeProviders.size() == 0)
+    if (timeProviders.countTimeProviders() == 0)
     {
         return false;
     }
@@ -202,12 +200,4 @@ bool IrrigationSystem::IsSystemInitializedAtMinimal()
     }
 
     return true;
-}
-
-void IrrigationSystem::UpdateTimeProviders()
-{
-    _for_each(timeProviders, _tp, ITimeProvider *)
-    {
-        _tp->update();
-    }
 }

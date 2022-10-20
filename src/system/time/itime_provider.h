@@ -47,7 +47,11 @@ public:
      */
     Time_s get() const { return datetime; }
 
+    virtual void set(Time_s newNow) {  }
+
     virtual const char* getTypeName () const = 0;
+
+    virtual ~ITimeProvider() {}
 };
 
 #endif // __IRRIGATION_SYSTEM_TIME_INTERFACE_H__

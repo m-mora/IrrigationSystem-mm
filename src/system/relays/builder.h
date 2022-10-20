@@ -44,7 +44,7 @@ public:
     RelayCollectionBuilder();
 
     RelayCollectionBuilder &setExpander(IOExpander *expander);
-    RelayCollectionBuilder &setTimeProvider(ITimeProvider *expander);
+    RelayCollectionBuilder &setTimeProvider(ITimeProvider *timeProvider);
     RelayCollectionBuilder &setSystemData(SystemData_t *sysData);
     RelayBuilder forPin(IOActionPin_e position);
 

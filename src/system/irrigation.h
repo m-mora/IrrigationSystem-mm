@@ -26,14 +26,70 @@
 #include "time/services/rtc.h"
 #include "utils/list.h"
 
-#define KERNEL_VERSION "0.2.0"
+#define KERNEL_VERSION "0.2.1"
 #define KERNEL_SERIAL_SPEED 115200
+
+class SystemTimeProvider : public ITimeProvider {
+    LinkedList<ITimeProvider*> providers;
+public:
+    SystemTimeProvider()
+    : providers () { }
+
+    template <typename Tprovider>
+    bool TryToRegisterTimeProvider () {
+        Tprovider *p = new Tprovider();
+        providers.add(p);
+        return true;
+    }
+
+    int countTimeProviders () {
+        return providers.size();
+    }
+
+    virtual const char* getTypeName () const { return "None"; }
+
+    const LinkedList<const char*> getNames() {
+        LinkedList<const char*> names;
+        _for_each(providers, _tp, ITimeProvider *)
+        {
+            names.add(_tp->getTypeName());
+        }
+        return names;
+    }
+
+    bool init() {
+        bool success = true;
+        _for_each(providers, _tp, ITimeProvider *)
+        {
+            if (!_tp->init())
+            {
+                delete _tp;
+                success = false;
+            }
+        }
+        return success;
+    }
+
+    bool update() {
+        bool anySucess = false;
+        _for_each(providers, _tp, ITimeProvider *)
+        {
+            if (_tp->update()) {
+                datetime = _tp->get();
+                anySucess = true;
+            } else if (anySucess) {
+                _tp->set(datetime);
+            }
+        }
+        return anySucess;
+    }
+};
 
 class IrrigationSystem {
     //
     // Components
     //
-    LinkedList<ITimeProvider*> timeProviders;
+    SystemTimeProvider timeProviders;
     IOExpander ioExpander;
     LinkedList<IORelay*> *relays;
 
@@ -50,21 +106,7 @@ class IrrigationSystem {
 
     void ScanI2CDevicesAndDumpTable();
 
-    template <typename Tprovider>
-    bool TryToRegisterTimeProvider () {
-        Tprovider *p = new Tprovider();
-        if (!p->init())
-        {
-            delete p;
-            return false;
-        }
-        timeProviders.add(p);
-        return true;
-    }
-
     bool IsSystemInitializedAtMinimal ();
-
-    void UpdateTimeProviders ();
 
     //
     // Data members
