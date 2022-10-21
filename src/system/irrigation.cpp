@@ -21,44 +21,49 @@ SysLogger logger(nullptr);
 
 IrrigationSystem::IrrigationSystem()
 {
-    timeProviders.clear();
     Status.Sensors.humidityLevel = 0.0f;
     Status.Sensors.isAnyValveOn = false;
     Status.Sensors.isPresenceDetected = false;
     Status.Sensors.isRaining = false;
 }
 
-void IrrigationSystem::init()
+bool IrrigationSystem::init()
 {
     InitLogger();
     DumpSysInfo();
 
     logger << LOG_INFO << "Initializing System..." << EndLine;
     InitWifi();
+    ScanI2CDevicesAndDumpTable();
     InitDevices();
+    ConfigureTimeProviders();
     InitSensors();
     InitRelays();
     logger << LOG_INFO << "Initialization finished!" << EndLine;
 
+    return IsSystemInitializedAtMinimal();
+}
+
+void IrrigationSystem::run()
+{
     while (true)
     {
         Status.sysMilliseconds = millis();
 
         doUntilTimeElapsed(__update_rtc_handler, 1000, {
-            logger << LOG_INFO << "Updating time..." << EndLine;
-            timeProviders[0]->update(); // Change of time provider dinamically...
-            logger << LOG_INFO << "Readed time: " << timeProviders[0]->get().toString() << EndLine;
-            logger << LOG_INFO << "Updating relay status..." << EndLine;
+            timeProviders.update();
+            logger << LOG_INFO << "Now:  " << timeProviders.get().toString() << EndLine;
             IORelay *relay = NULL;
-            for (size_t i = 0; i < relays->size(); i++) {
+            for (int i = 0; i < relays->size(); i++)
+            {
                 relay = relays->get(i);
-                if (relay == NULL) {
+                if (relay == NULL)
+                {
                     logger << LOG_WARN << "Found NULL instances while updating relays" << EndLine;
                     continue;
                 }
                 relay->update();
             }
-            logger << LOG_INFO << "Relays status updated!" << EndLine;
         });
     }
 }
@@ -73,7 +78,8 @@ void IrrigationSystem::DumpSysInfo()
            << "           | |\\  \\| |_____| |_| \\__/\\      \n"
            << "           \\_| \\_/\\_____/\\___/ \\____/     \n"
            << "--------------------------------------------------------\n"
-           << LOG_MASTER << "Fimware version: " << KERNEL_VERSION << EndLine << LOG_MASTER << "Build date: " << __DATE__ << " " << __TIME__ << EndLine;
+           << LOG_MASTER << "Fimware version: " << KERNEL_VERSION << EndLine
+           << LOG_MASTER << "Build date: " << Time_s(getBuildTime(__DATE__, __TIME__)).toString() << EndLine;
 }
 
 void IrrigationSystem::InitLogger()
@@ -86,23 +92,12 @@ void IrrigationSystem::InitLogger()
 void IrrigationSystem::InitWifi()
 {
     WifiInitialize();
-    TimeProviderNTP *ntpProvider = new TimeProviderNTP();
-    if (ntpProvider->init())
-    {
-        timeProviders.add(ntpProvider);
-    }
 }
 
 void IrrigationSystem::InitDevices()
 {
-    ScanI2CDevicesAndDumpTable ();
-
-    ioExpander.init(0x38);
-
-    TimeProviderRTC *rtcProvider = new TimeProviderRTC();
-    if (rtcProvider->init())
-    {
-        timeProviders.add(rtcProvider);
+    if (!ioExpander.init(0x38)) {
+        logger << LOG_ERROR << "Cant't initialize IO Expander" << EndLine;
     }
 }
 
@@ -117,15 +112,27 @@ void IrrigationSystem::InitRelays()
     relays = RelayCollectionBuilder::create()
                  .setExpander(&ioExpander)
                  .setSystemData(&Status)
-                 .setTimeProvider(timeProviders[0]) // Change of time provider dinamically...
+                 .setTimeProvider(&timeProviders)
                  .forPin(IO_0)
                     .onDay(DAYS_PER_WEEK)
-                    .onTime(15, 51, 0)
+                    .onTime(13, 42, 0)
                     .duration(20)
                  .forPin(IO_1)
                     .onDay(DAYS_PER_WEEK)
-                    .onTime(15, 52, 0)
+                    .onTime(13, 43, 0)
                     .duration(30)
+                 .forPin(IO_2)
+                    .onDay(DAYS_PER_WEEK)
+                    .onTime(13, 44, 0)
+                    .duration(35)
+                 .forPin(IO_3)
+                    .onDay(DAYS_PER_WEEK)
+                    .onTime(13, 45, 0)
+                    .duration(40)
+                 .forPin(IO_4)
+                    .onDay(DAYS_PER_WEEK)
+                    .onTime(13, 46, 0)
+                    .duration(45)
                 .done()
                  ->build();
     logger << LOG_INFO << LOGGER_TEXT_GREEN << "Done!" << EndLine;
@@ -164,5 +171,29 @@ void IrrigationSystem::ScanI2CDevicesAndDumpTable()
 
         logger << buffer << F(" ");
     }
+
     logger << EndLine;
+}
+
+void IrrigationSystem::ConfigureTimeProviders()
+{
+    timeProviders.TryToRegisterTimeProvider<TimeProviderNTP>();
+    timeProviders.TryToRegisterTimeProvider<TimeProviderRTC>();
+
+    timeProviders.init();
+}
+
+bool IrrigationSystem::IsSystemInitializedAtMinimal()
+{
+    if (timeProviders.countTimeProviders() == 0)
+    {
+        return false;
+    }
+
+    if (!ioExpander.isConnected())
+    {
+        return false;
+    }
+
+    return true;
 }

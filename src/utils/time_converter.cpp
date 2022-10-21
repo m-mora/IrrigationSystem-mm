@@ -11,8 +11,8 @@ Time_s getDateTimeFromEpochTime(unsigned long epoch){
     Time_s datetime;
     int residue = 0;
     //Year
-    datetime.year = (uint8_t) YEAR_ZERO+(epoch/SECONDS_IN_YEAR);
-    residue = epoch-(SECONDS_IN_YEAR*datetime.year);
+    datetime.year = (uint16_t) YEAR_ZERO+(epoch/SECONDS_IN_YEAR);
+    residue = epoch % SECONDS_IN_YEAR;
     //Month
     datetime.month = (uint8_t)(residue/SECONDS_IN_MONTH);
     residue = residue-(SECONDS_IN_MONTH*datetime.month);

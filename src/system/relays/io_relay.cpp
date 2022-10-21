@@ -8,6 +8,12 @@ void IORelay::set_config(IORelayConfig_t new_config)
 
 void IORelay::update()
 {
+    if (device == NULL)
+    {
+        logger << LOG_ERROR << "Device pointer is NULL" << EndLine;
+        return;
+    }
+
     if (isRelayOn && isTurnOnDurationTimeOver())
     {
         turnOffRelay();
@@ -32,30 +38,34 @@ bool IORelay::isMomentToTurnOn()
     bool isTime = false;
     Time_s now = config.timeProvider->get();
     uint8_t dayOfWeek = now.toDateTime().dayOfTheWeek();
-
     // Check is today on the list of days?
     isTime = (config.WeekDaysToTurnOn.Data & (1 << dayOfWeek)) != 0;
     logger << LOG_DEBUG << "isMomentToTurnOn: isDay? " << isTime << EndLine;
 
-    // Check is time?
-    if (isTime)
-    {
-        Time_s turnOnTime = config.timeToTurnOn;
-        turnOnTime.year = now.year;
-        turnOnTime.month = now.month;
-        turnOnTime.day = now.day;
-        TimeSpan deltaTime = now.toDateTime() - turnOnTime.toDateTime();
+    if (!isTime) {
+        return isTime;
+    }
 
-        isTime = deltaTime.totalseconds() <= 5;
-        logger << LOG_DEBUG << "isMomentToTurnOn: isTime? " << isTime << ", rest seconds: " << deltaTime.totalseconds() << EndLine;
+    // Check is time?
+    Time_s turnOnTime = config.timeToTurnOn;
+    turnOnTime.year = now.year;
+    turnOnTime.month = now.month;
+    turnOnTime.day = now.day;
+    TimeSpan deltaTime = now.toDateTime() - turnOnTime.toDateTime();
+
+    isTime = abs(deltaTime.totalseconds()) <= 5;
+    logger << LOG_DEBUG << "isMomentToTurnOn: isTime? " << isTime << ", rest seconds: " << deltaTime.totalseconds() << EndLine;
+
+    if (!isTime) {
+        return isTime;
     }
 
     // Check is any other relay on?
-    if (isTime && config.systemData->Sensors.isAnyValveOn)
+    if (config.systemData->Sensors.isAnyValveOn)
     {
         isTime = false;
     }
-    logger << LOG_DEBUG << "isMomentToTurnOn: any other relay is on? " << isTime << EndLine;
+    logger << LOG_DEBUG << "isMomentToTurnOn: any other relay is on? " << config.systemData->Sensors.isAnyValveOn << EndLine;
 
     return isTime;
 }
@@ -73,5 +83,6 @@ void IORelay::turnOnRelay()
     logger << LOG_INFO << "Turning on relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
     config.systemData->Sensors.isAnyValveOn = true;
     isRelayOn = true;
+    storedTurnOnTime = config.timeProvider->get().toDateTime();
     device->write(this->position, isRelayOn);
 }

@@ -7,6 +7,10 @@ Time_s::Time_s(DateTime time)
   : year(time.year()), month(time.month()), day(time.day()),
     hour(time.hour()), minute(time.minute()), second(time.second()) { }
 
+Time_s::Time_s(CompilationTime_t c_time)
+  : year(c_time.year), month(c_time.month), day(c_time.day),
+    hour(c_time.hour), minute(c_time.minute), second(c_time.second) { }
+
 String Time_s::toString() const {
   char buff[30];
   toCharArray(buff);

@@ -25,15 +25,87 @@
 #include "time/services/ntp.h"
 #include "time/services/rtc.h"
 #include "utils/list.h"
+#include "utils/logger.h"
 
-#define KERNEL_VERSION "0.1.2"
+#define KERNEL_VERSION "0.2.1"
 #define KERNEL_SERIAL_SPEED 115200
+
+class SystemTimeProvider : public ITimeProvider {
+    LinkedList<ITimeProvider*> providers;
+public:
+    SystemTimeProvider()
+    : providers () { }
+
+    template <typename Tprovider>
+    bool TryToRegisterTimeProvider () {
+        Tprovider *p = new Tprovider();
+        providers.add(p);
+        return true;
+    }
+
+    int countTimeProviders () {
+        return providers.size();
+    }
+
+    virtual const char* getTypeName () const { return "None"; }
+
+    const LinkedList<const char*> getNames() {
+        LinkedList<const char*> names;
+        _for_each(providers, _tp, ITimeProvider *)
+        {
+            names.add(_tp->getTypeName());
+        }
+        return names;
+    }
+
+    bool init() {
+        bool success = true;
+        uint8_t index = 0;
+        logger << LOG_INFO << "Initializing Time Providers" << EndLine;
+        _for_each(providers, _tp, ITimeProvider *)
+        {
+            if (!_tp->init())
+            {
+                delete _tp;
+                providers.remove(index);
+                success = false;
+                logger << LOG_ERROR << "  - Init " << _tp->getTypeName() << LOGGER_TEXT_RED << " Failure!" << EndLine;
+            } else {
+                logger << LOG_INFO << "  - Init " << _tp->getTypeName() << LOGGER_TEXT_GREEN << " Success" << EndLine;
+                index++;
+            }
+        }
+        return success;
+    }
+
+    bool update() {
+        bool anySucess = false;
+        _for_each(providers, _tp, ITimeProvider *)
+        {
+            logger << LOG_DEBUG << "Updating " << _tp->getTypeName() << EndLine;
+            bool status = _tp->update();
+            if (status) {
+                logger << LOG_DEBUG << LOGGER_TEXT_GREEN << "Success!" << EndLine;
+                if (!anySucess) {
+                    datetime = _tp->get();
+                }
+                anySucess = true;
+            } else {
+                logger << LOG_ERROR << "Error while updating time provider!" << EndLine;
+                if (anySucess) {
+                    _tp->set(datetime);
+                }
+            }
+        }
+        return anySucess;
+    }
+};
 
 class IrrigationSystem {
     //
     // Components
     //
-    LinkedList<ITimeProvider*> timeProviders;
+    SystemTimeProvider timeProviders;
     IOExpander ioExpander;
     LinkedList<IORelay*> *relays;
 
@@ -46,8 +118,11 @@ class IrrigationSystem {
     void InitDevices();
     void InitSensors();
     void InitRelays();
+    void ConfigureTimeProviders();
 
     void ScanI2CDevicesAndDumpTable();
+
+    bool IsSystemInitializedAtMinimal ();
 
     //
     // Data members
@@ -55,7 +130,8 @@ class IrrigationSystem {
     SystemData_t Status;
 public:
     IrrigationSystem();
-    void init();
+    bool init();
+    void run();
 };
 
 #endif // __IRRIGATION_SYSTEM_H__

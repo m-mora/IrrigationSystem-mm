@@ -42,6 +42,12 @@ public:
      * @return false On failure
      */
     bool update();
+
+    void set(Time_s newNow);
+
+    const char* getTypeName () const {
+        return "RTC";
+    }
 };
 
 

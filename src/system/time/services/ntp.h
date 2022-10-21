@@ -26,6 +26,10 @@ class TimeProviderNTP : public ITimeProvider
 {
     WiFiUDP ntpUDP;
     NTPClient timeClient;
+    uint32_t epochUtcTime;
+
+    bool updateNTP();
+    bool updateUTCTime();
 public:
     TimeProviderNTP();
     /**
@@ -43,6 +47,10 @@ public:
      * @return false On failure
      */
     bool update();
+
+    const char* getTypeName () const {
+        return "NTP";
+    }
 };
 
 

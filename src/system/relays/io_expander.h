@@ -72,6 +72,10 @@ public:
     uint8_t getAddress() const {
         return i2cDevice.getAddress();
     }
+
+    bool isConnected () {
+        return i2cDevice.isConnected();
+    }
 };
 
 #endif // __IRRIGATION_SYSTEM_RELAYS_IO_EXPANDER_H__
