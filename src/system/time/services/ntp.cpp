@@ -35,10 +35,7 @@ bool TimeProviderNTP::init()
  */
 bool TimeProviderNTP::update()
 {
-    this->datetime = {0, 0, 0, 0, 0, 0};
-    bool status ;
-    
-    status = this->updateNTP();
+    bool status = this->updateNTP();
 
     DateTime _dateTime = DateTime(timeClient.getEpochTime());
     datetime.year = _dateTime.year();
@@ -57,7 +54,7 @@ bool TimeProviderNTP::update()
 
 bool TimeProviderNTP::updateUTCTime()
 {
-    bool success = timeClient.update();
+    bool success = timeClient.forceUpdate();
     if (!success) {
         return false;
     }

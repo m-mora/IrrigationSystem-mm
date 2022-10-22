@@ -20,7 +20,6 @@ bool TimeProviderRTC::init()
         return false;
     }
 
-    DateTime BuildTime(F(__DATE__), F(__TIME__));
     return true;
 }
 
@@ -32,11 +31,11 @@ bool TimeProviderRTC::init()
  */
 bool TimeProviderRTC::update()
 {
-    this->datetime = {0, 0, 0, 0, 0, 0};
-    DateTime now = rtc.now();
-    datetime.year = now.year();
-    datetime.month = now.month();
-    datetime.day = now.day();
+    DateTime now    = rtc.now();
+    datetime.year   = now.year();
+    datetime.month  = now.month();
+    datetime.day    = now.day();
+    datetime.hour   = now.hour();
     datetime.minute = now.minute();
     datetime.second = now.second();
     if (now.unixtime() < MIN_UNIX_TIME)
