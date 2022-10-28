@@ -1,12 +1,12 @@
-#include "io_relay.h"
+#include "water_valve.h"
 #include "utils/logger.h"
 
-void IORelay::set_config(IORelayConfig_t new_config)
+void WaterValve::set_config(IORelayConfig_t new_config)
 {
     this->config = new_config;
 }
 
-void IORelay::update()
+void WaterValve::update()
 {
     if (device == NULL)
     {
@@ -24,7 +24,7 @@ void IORelay::update()
     }
 }
 
-bool IORelay::isTurnOnDurationTimeOver()
+bool WaterValve::isTurnOnDurationTimeOver()
 {
     DateTime now = config.timeProvider->get().toDateTime();
     TimeSpan deltaTime = now - storedTurnOnTime;
@@ -32,7 +32,7 @@ bool IORelay::isTurnOnDurationTimeOver()
     return deltaTime.totalseconds() >= config.turnOnDuration;
 }
 
-bool IORelay::isMomentToTurnOn()
+bool WaterValve::isMomentToTurnOn()
 {
     bool isTime = false;
     Time_s now = config.timeProvider->get();
@@ -69,7 +69,7 @@ bool IORelay::isMomentToTurnOn()
     return isTime;
 }
 
-void IORelay::turnOffRelay()
+void WaterValve::turnOffRelay()
 {
     logger << LOG_INFO << "Turning off relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
     config.systemData->Sensors.isAnyValveOn = false;
@@ -77,7 +77,7 @@ void IORelay::turnOffRelay()
     this->turn_off();
 }
 
-void IORelay::turnOnRelay()
+void WaterValve::turnOnRelay()
 {
     logger << LOG_INFO << "Turning on relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
     config.systemData->Sensors.isAnyValveOn = true;

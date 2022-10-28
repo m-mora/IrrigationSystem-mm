@@ -19,7 +19,7 @@
 #define __IRRIGATION_SYSTEM_RELAY_BUILDER_H__
 
 #include "io_expander.h"
-#include "io_relay.h"
+#include "water_valve.h"
 #include "system/system_data.h"
 #include "system/time/itime_provider.h"
 #include <utils/list.h>
@@ -28,7 +28,7 @@ class RelayBuilder;
 
 class RelayCollectionBuilder
 {
-    LinkedList<IORelay*> *relays;
+    LinkedList<WaterValve*> *relays;
     IOExpander *expander;
     ITimeProvider *timeProvider;
     IOActionPin_e voltageValvePin;
@@ -50,7 +50,7 @@ public:
     RelayCollectionBuilder &setSystemData(SystemData_t *sysData);
     RelayBuilder forPin(IOActionPin_e position);
 
-    LinkedList<IORelay*> *build();
+    LinkedList<WaterValve*> *build();
 };
 
 class RelayBuilder
@@ -63,7 +63,7 @@ public:
     RelayBuilder(IOActionPin_e position, RelayCollectionBuilder *parent = nullptr);
 
     RelayBuilder forPin(IOActionPin_e position);
-    IORelay *build();
+    WaterValve *build();
 
     RelayCollectionBuilder* done();
 

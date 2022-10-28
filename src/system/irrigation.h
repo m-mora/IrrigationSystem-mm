@@ -21,7 +21,7 @@
 #include "system/time/itime_provider.h"
 #include "system_data.h"
 #include "system/relays/io_expander.h"
-#include "system/relays/io_relay.h"
+#include "system/relays/water_valve.h"
 #include "time/services/ntp.h"
 #include "time/services/rtc.h"
 #include "utils/list.h"
@@ -107,7 +107,7 @@ class IrrigationSystem {
     //
     SystemTimeProvider timeProviders;
     IOExpander ioExpander;
-    LinkedList<IORelay*> *relays;
+    LinkedList<WaterValve*> *relays;
 
     //
     // Private methods

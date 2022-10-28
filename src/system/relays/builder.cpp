@@ -3,7 +3,7 @@
 
 RelayCollectionBuilder::RelayCollectionBuilder()
 {
-    relays = new LinkedList<IORelay*>();
+    relays = new LinkedList<WaterValve*>();
     relays->clear();
 }
 
@@ -37,7 +37,7 @@ RelayBuilder RelayCollectionBuilder::forPin(IOActionPin_e position)
     return RelayBuilder(position, this);
 }
 
-LinkedList<IORelay*> *RelayCollectionBuilder::build()
+LinkedList<WaterValve*> *RelayCollectionBuilder::build()
 {
     logger << LOG_DEBUG << "Relay created " << relays->size() << EndLine;
     return relays;
@@ -62,9 +62,9 @@ RelayBuilder RelayBuilder::forPin(IOActionPin_e position)
     return parent->forPin(position);
 }
 
-IORelay* RelayBuilder::build()
+WaterValve* RelayBuilder::build()
 {
-    IORelay* relay = new IORelay(position, config);
+    WaterValve* relay = new WaterValve(position, config);
     relay->attach_expander(parent->expander);
     return relay;
 }
