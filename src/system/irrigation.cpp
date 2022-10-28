@@ -53,7 +53,7 @@ void IrrigationSystem::run()
         doUntilTimeElapsed(__update_rtc_handler, 1000, {
             timeProviders.update();
             logger << LOG_INFO << "Now:  " << timeProviders.get().toString() << EndLine;
-            IORelay *relay = NULL;
+            WaterValve *relay = NULL;
             for (int i = 0; i < relays->size(); i++)
             {
                 relay = relays->get(i);

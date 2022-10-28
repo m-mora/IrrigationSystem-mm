@@ -22,19 +22,19 @@
 #include "relay_config.h"
 #include "RTClib.h"
 
-class IORelay : public IOAction
+class WaterValve : public IOAction
 {
     IORelayConfig_t config;
     DateTime storedTurnOnTime;
 
 public:
     /**
-     * @brief Construct a new IORelay object
+     * @brief Construct a new WaterValve object
      * 
      * @param position IO Position on the expander.
      * @param config   Relay configuration
      */
-    IORelay(IOActionPin_e position, IORelayConfig_t config)
+    WaterValve(IOActionPin_e position, IORelayConfig_t config)
         : IOAction(position), config(config), storedTurnOnTime() {}
 
     /**
