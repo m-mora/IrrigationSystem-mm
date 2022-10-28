@@ -71,17 +71,23 @@ bool WaterValve::isMomentToTurnOn()
 
 void WaterValve::turnOffRelay()
 {
-    logger << LOG_INFO << "Turning off relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
     config.systemData->Sensors.isAnyValveOn = false;
-    if (config.voltageRelay) { config.voltageRelay->turn_off(); };
+    if (config.voltageRelay) {
+        logger << LOG_DEBUG << " Calling Voltage Relay in pos " << config.voltageRelay->getPosition() << EndLine;
+        config.voltageRelay->turn_off();
+    };
+    logger << LOG_INFO << "Turning off relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
     this->turn_off();
 }
 
 void WaterValve::turnOnRelay()
 {
-    logger << LOG_INFO << "Turning on relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
     config.systemData->Sensors.isAnyValveOn = true;
     storedTurnOnTime = config.timeProvider->get().toDateTime();
-    if (config.voltageRelay) { config.voltageRelay->turn_on(); };
+    if (config.voltageRelay) {
+        logger << LOG_DEBUG << " Calling Voltage Relay in pos " << config.voltageRelay->getPosition() << EndLine;
+        config.voltageRelay->turn_on();
+    };
+    logger << LOG_INFO << "Turning on relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
     this->turn_on();
 }

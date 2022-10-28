@@ -59,6 +59,8 @@ public:
         device = expander;
     }
 
+    IOActionPin_e getPosition () const { return this->position; }
+
     /**
      * @brief Returns the state.
      * 

@@ -27,7 +27,7 @@ RelayCollectionBuilder &RelayCollectionBuilder::setSystemData(SystemData_t *sysD
 
 RelayCollectionBuilder &RelayCollectionBuilder::setVoltageValvePin(IOActionPin_e pin) 
 {
-    this->voltageValvePin = voltageValvePin;
+    this->voltageValvePin = pin;
     return *this;
 }
 
