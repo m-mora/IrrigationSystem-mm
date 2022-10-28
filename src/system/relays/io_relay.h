@@ -25,7 +25,6 @@
 class IORelay : public IOAction
 {
     IORelayConfig_t config;
-    bool isRelayOn;
     DateTime storedTurnOnTime;
 
 public:
@@ -36,7 +35,7 @@ public:
      * @param config   Relay configuration
      */
     IORelay(IOActionPin_e position, IORelayConfig_t config)
-        : IOAction(position), config(config), isRelayOn(false), storedTurnOnTime() {}
+        : IOAction(position), config(config), storedTurnOnTime() {}
 
     /**
      * @brief Set the config object

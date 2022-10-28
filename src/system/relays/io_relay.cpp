@@ -14,15 +14,14 @@ void IORelay::update()
         return;
     }
 
-    if (isRelayOn && isTurnOnDurationTimeOver())
+    if (this->state && isTurnOnDurationTimeOver())
     {
         turnOffRelay();
     }
-    else if (!isRelayOn && isMomentToTurnOn())
+    else if (!this->state && isMomentToTurnOn())
     {
         turnOnRelay();
     }
-    this->state = isRelayOn;
 }
 
 bool IORelay::isTurnOnDurationTimeOver()
@@ -74,15 +73,15 @@ void IORelay::turnOffRelay()
 {
     logger << LOG_INFO << "Turning off relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
     config.systemData->Sensors.isAnyValveOn = false;
-    isRelayOn = false;
-    device->write(this->position, isRelayOn);
+    if (config.voltageRelay) { config.voltageRelay->turn_off(); };
+    this->turn_off();
 }
 
 void IORelay::turnOnRelay()
 {
     logger << LOG_INFO << "Turning on relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
     config.systemData->Sensors.isAnyValveOn = true;
-    isRelayOn = true;
     storedTurnOnTime = config.timeProvider->get().toDateTime();
-    device->write(this->position, isRelayOn);
+    if (config.voltageRelay) { config.voltageRelay->turn_on(); };
+    this->turn_on();
 }

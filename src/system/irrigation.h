@@ -27,7 +27,7 @@
 #include "utils/list.h"
 #include "utils/logger.h"
 
-#define KERNEL_VERSION "0.2.1"
+#define KERNEL_VERSION "0.3.0"
 #define KERNEL_SERIAL_SPEED 115200
 
 class SystemTimeProvider : public ITimeProvider {

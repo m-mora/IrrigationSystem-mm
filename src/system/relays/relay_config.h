@@ -26,8 +26,9 @@ typedef struct {
     //
     // Pointers to access system structures
     //
-    ITimeProvider *timeProvider;
-    SystemData_t *systemData;
+    ITimeProvider   *timeProvider;
+    SystemData_t    *systemData;
+    IOAction        *voltageRelay;
 
     //
     // Info for relay

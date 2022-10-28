@@ -40,7 +40,7 @@ public:
      * @return true  On success
      * @return false On failure
      */
-    bool init ();
+    bool init () { return true; }
 
     /**
      * @brief Updates the state.
@@ -48,7 +48,7 @@ public:
      * @return true  On success
      * @return false On failure
      */
-    bool update ();
+    bool update () { return true; }
 
     /**
      * @brief Attach action to a IO Expander.
@@ -66,6 +66,20 @@ public:
      */
     bool active () const {
         return this->state;
+    }
+
+    void turn_off ()
+    {
+        state = false;
+        if (device)
+            device->write(position, state);
+    }
+
+    void turn_on ()
+    {
+        state = true;
+        if (device)
+            device->write(position, state);
     }
 };
 

@@ -31,6 +31,7 @@ class RelayCollectionBuilder
     LinkedList<IORelay*> *relays;
     IOExpander *expander;
     ITimeProvider *timeProvider;
+    IOActionPin_e voltageValvePin;
     SystemData_t *sysData;
 
     friend class RelayBuilder;
@@ -44,6 +45,7 @@ public:
     RelayCollectionBuilder();
 
     RelayCollectionBuilder &setExpander(IOExpander *expander);
+    RelayCollectionBuilder &setVoltageValvePin(IOActionPin_e pin);
     RelayCollectionBuilder &setTimeProvider(ITimeProvider *timeProvider);
     RelayCollectionBuilder &setSystemData(SystemData_t *sysData);
     RelayBuilder forPin(IOActionPin_e position);

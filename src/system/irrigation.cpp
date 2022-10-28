@@ -86,7 +86,7 @@ void IrrigationSystem::InitLogger()
 {
     Serial.begin(KERNEL_SERIAL_SPEED);
     logger.setLogOutput(&Serial);
-    logger.setLogLevel(LOG_DEBUG);
+    logger.setLogLevel(LOG_INFO);
 }
 
 void IrrigationSystem::InitWifi()
@@ -113,26 +113,23 @@ void IrrigationSystem::InitRelays()
                  .setExpander(&ioExpander)
                  .setSystemData(&Status)
                  .setTimeProvider(&timeProviders)
+                 .setVoltageValvePin(IO_4)
                  .forPin(IO_0)
                     .onDay(DAYS_PER_WEEK)
-                    .onTime(13, 42, 0)
+                    .onTime(20, 50, 0)
                     .duration(20)
                  .forPin(IO_1)
                     .onDay(DAYS_PER_WEEK)
-                    .onTime(13, 43, 0)
+                    .onTime(20, 53, 0)
                     .duration(30)
                  .forPin(IO_2)
                     .onDay(DAYS_PER_WEEK)
-                    .onTime(13, 44, 0)
+                    .onTime(20, 54, 0)
                     .duration(35)
                  .forPin(IO_3)
                     .onDay(DAYS_PER_WEEK)
-                    .onTime(13, 45, 0)
+                    .onTime(20, 55, 0)
                     .duration(40)
-                 .forPin(IO_4)
-                    .onDay(DAYS_PER_WEEK)
-                    .onTime(13, 46, 0)
-                    .duration(45)
                 .done()
                  ->build();
     logger << LOG_INFO << LOGGER_TEXT_GREEN << "Done!" << EndLine;

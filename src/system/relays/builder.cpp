@@ -25,6 +25,12 @@ RelayCollectionBuilder &RelayCollectionBuilder::setSystemData(SystemData_t *sysD
     return *this;
 }
 
+RelayCollectionBuilder &RelayCollectionBuilder::setVoltageValvePin(IOActionPin_e pin) 
+{
+    this->voltageValvePin = voltageValvePin;
+    return *this;
+}
+
 RelayBuilder RelayCollectionBuilder::forPin(IOActionPin_e position)
 {
     logger << LOG_DEBUG << "Build new relay for bit " << (uint8_t)position << EndLine;
@@ -42,6 +48,8 @@ RelayBuilder::RelayBuilder(IOActionPin_e position, RelayCollectionBuilder *paren
     if (parent != nullptr) {
         config.timeProvider = parent->timeProvider;
         config.systemData = parent->sysData;
+        config.voltageRelay = new IOAction(parent->voltageValvePin);
+        config.voltageRelay->attach_expander(parent->expander);
     }
 }
 
