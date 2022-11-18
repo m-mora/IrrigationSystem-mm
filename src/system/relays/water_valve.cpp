@@ -72,12 +72,12 @@ bool WaterValve::isMomentToTurnOn()
 void WaterValve::turnOffRelay()
 {
     config.systemData->Sensors.isAnyValveOn = false;
+    this->turn_off();
+    logger << LOG_INFO << "Turning off relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
     if (config.voltageRelay) {
         logger << LOG_DEBUG << " Calling Voltage Relay in pos " << config.voltageRelay->getPosition() << EndLine;
         config.voltageRelay->turn_off();
     };
-    logger << LOG_INFO << "Turning off relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
-    this->turn_off();
 }
 
 void WaterValve::turnOnRelay()

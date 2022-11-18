@@ -4,7 +4,7 @@
 #include "../../connectivity/wifi.h"
 
 // Define NTP properties
-#define NTP_OFFSET   -5 * 60 * 60    // utc offset
+#define NTP_OFFSET   -6 * 60 * 60    // utc offset
 #define NTP_INTERVAL 60 * 1000       // miliseconds
 #define NTP_ADDRESS  "pool.ntp.org"  // URL NTP Server
 
