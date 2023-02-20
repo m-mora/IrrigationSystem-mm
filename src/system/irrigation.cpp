@@ -91,7 +91,7 @@ void IrrigationSystem::InitLogger()
 
 void IrrigationSystem::InitWifi()
 {
-    WifiInitialize();
+    WiFiConnection::WifiInitialize();
 }
 
 void IrrigationSystem::InitDevices()

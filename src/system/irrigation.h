@@ -26,6 +26,7 @@
 #include "time/services/rtc.h"
 #include "utils/list.h"
 #include "utils/logger.h"
+#include "system/connectivity/wifi.h"
 
 #define KERNEL_VERSION "0.3.1"
 #define KERNEL_SERIAL_SPEED 115200
@@ -66,7 +67,6 @@ public:
         {
             if (!_tp->init())
             {
-                delete _tp;
                 providers.remove(index);
                 success = false;
                 logger << LOG_ERROR << "  - Init " << _tp->getTypeName() << LOGGER_TEXT_RED << " Failure!" << EndLine;
