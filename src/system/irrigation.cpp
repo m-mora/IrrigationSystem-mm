@@ -5,6 +5,8 @@
 #include "utils/logger.h"
 #include "relays/builder.h"
 
+using namespace WiFiConnection;
+
 SysLogger logger(nullptr);
 
 #define doUntilTimeElapsed(__time_handler, __ms_elapsed, __function) \
@@ -91,7 +93,7 @@ void IrrigationSystem::InitLogger()
 
 void IrrigationSystem::InitWifi()
 {
-    WifiInitialize();
+    WiFiConnection::WifiInitialize();
 }
 
 void IrrigationSystem::InitDevices()
