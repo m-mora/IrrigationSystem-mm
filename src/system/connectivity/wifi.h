@@ -51,6 +51,10 @@ namespace WiFiConnection
     String getTemplate();
     String getDeviceName();
     String getToken();
+<<<<<<< HEAD
+=======
+    void saveParamCallback ();
+>>>>>>> 8eda5e961317b3321a7e03c533007d0169f010c8
     
 };
 #endif // !__IRRIGATION_SYSTEM_CONNECTIVITY_WIFI_H__
