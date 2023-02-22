@@ -21,17 +21,17 @@
 
 #include <WiFiManager.h>
 
-    /**
-     * @brief Specifies the wifi ssid.
-     * 
-     */
-    extern const char* WIFI_SSID;
+/**
+ * @brief Specifies the wifi ssid.
+ * 
+ */
+extern const char* WIFI_SSID;
 
-    /**
-     * @brief Specifies the wifi password.
-     * 
-     */
-    extern const char* WIFI_PASSWORD;
+/**
+ * @brief Specifies the wifi password.
+ * 
+ */
+extern const char* WIFI_PASSWORD;
 
 namespace WiFiConnection
 {
