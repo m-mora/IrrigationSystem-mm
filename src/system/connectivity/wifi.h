@@ -33,16 +33,24 @@ extern const char* WIFI_SSID;
  */
 extern const char* WIFI_PASSWORD;
 
-/**
- * @brief Initialize WIFI interface using the specified configuration.
- * 
- * @param wifi_ssid      [Optional] WiFi SSID as a const char string.
- * @param wifi_password  [Optional] WiFi Password as a const char string.
- * @return wl_status_t   WiFi status code.
- */
-wl_status_t WifiInitialize (
-    const char* wifi_ssid = WIFI_SSID,
-    const char* wifi_password = WIFI_PASSWORD
-    );
+namespace WiFiConnection
+{
 
+    /**
+     * @brief Initialize WIFI interface using the specified configuration.
+     * 
+     * @param wifi_ssid      [Optional] WiFi SSID as a const char string.
+     * @param wifi_password  [Optional] WiFi Password as a const char string.
+     * @return wl_status_t   WiFi status code.
+     */
+    wl_status_t WifiInitialize (
+        const char* wifi_ssid = WIFI_SSID,
+        const char* wifi_password = WIFI_PASSWORD
+        );
+
+    String getTemplate();
+    String getDeviceName();
+    String getToken();
+    
+};
 #endif // !__IRRIGATION_SYSTEM_CONNECTIVITY_WIFI_H__
