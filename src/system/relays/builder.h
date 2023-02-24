@@ -68,7 +68,7 @@ public:
     RelayCollectionBuilder* done();
 
     RelayBuilder &onTime (uint8_t hour, uint8_t minute, uint8_t second);
-    RelayBuilder &onDay (WeekDays_e day);
+    RelayBuilder &onDays (WeekDays_e days);
     RelayBuilder &duration (uint16_t seconds);
 };
 

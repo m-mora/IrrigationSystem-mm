@@ -75,13 +75,9 @@ RelayBuilder &RelayBuilder::onTime(uint8_t hour, uint8_t minute, uint8_t second)
     return *this;
 }
 
-RelayBuilder &RelayBuilder::onDay(WeekDays_e day)
+RelayBuilder &RelayBuilder::onDays(WeekDays_e days)
 {
-    if (day < DAYS_PER_WEEK) {
-        config.WeekDaysToTurnOn.Data |= (1 << (uint8_t)day);
-    } else {
-        config.WeekDaysToTurnOn.Data = 0b01111111;  // All days...
-    }
+    config.WeekDaysToTurnOn.Data = days;
     return *this;
 }
 

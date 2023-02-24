@@ -23,14 +23,14 @@
 #include <RTClib.h>
 
 typedef enum {
-  SUNDAY = 0,
-  MONDAY = 1,
-  TUESDAY = 2,
-  WENSDAY = 3,
-  THURSDAY = 4,
-  FRIDAY = 5,
-  SATURNDAY = 6,
-  DAYS_PER_WEEK = 7
+  SUNDAY = (1 << 0),
+  MONDAY = (1 << 1),
+  TUESDAY = (1 << 2),
+  WENSDAY = (1 << 3),
+  THURSDAY = (1 << 4),
+  FRIDAY = (1 << 5),
+  SATURNDAY = (1 << 6),
+  ALL_WEEK = 0b01111111
 } WeekDays_e;
 
 struct CompilationTime_t {
