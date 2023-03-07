@@ -37,6 +37,10 @@ bool TimeProviderNTP::update()
 {
     bool status = this->updateNTP();
 
+    if (!status) 
+    {
+        return false;
+    }
     DateTime _dateTime = DateTime(timeClient.getEpochTime());
     datetime.year = _dateTime.year();
     datetime.month = _dateTime.month();
@@ -45,11 +49,7 @@ bool TimeProviderNTP::update()
     datetime.minute = _dateTime.minute();
     datetime.second = _dateTime.second();
 
-    if (status) 
-    {
-        return true;
-    }
-    return false;
+    return true;
 }
 
 bool TimeProviderNTP::updateUTCTime()

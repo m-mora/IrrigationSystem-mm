@@ -96,6 +96,7 @@ public:
                     _tp->set(datetime);
                 }
             }
+            logger << LOG_INFO << _tp->getTypeName() << " - " << _tp->get().toString() << EndLine;
         }
         return anySucess;
     }

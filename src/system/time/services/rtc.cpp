@@ -32,16 +32,16 @@ bool TimeProviderRTC::init()
 bool TimeProviderRTC::update()
 {
     DateTime now    = rtc.now();
+    if (now.unixtime() < MIN_UNIX_TIME)
+    {
+        return false;
+    }
     datetime.year   = now.year();
     datetime.month  = now.month();
     datetime.day    = now.day();
     datetime.hour   = now.hour();
     datetime.minute = now.minute();
     datetime.second = now.second();
-    if (now.unixtime() < MIN_UNIX_TIME)
-    {
-        return false;
-    }
     return true;
 }
 
