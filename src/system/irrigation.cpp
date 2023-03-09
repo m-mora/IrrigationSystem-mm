@@ -86,7 +86,7 @@ void IrrigationSystem::InitLogger()
 {
     Serial.begin(KERNEL_SERIAL_SPEED);
     logger.setLogOutput(&Serial);
-    logger.setLogLevel(LOG_INFO);
+    logger.setLogLevel(LOG_LEVEL);
 }
 
 void IrrigationSystem::InitWifi()
