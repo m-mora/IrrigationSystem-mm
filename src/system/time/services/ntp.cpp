@@ -23,6 +23,7 @@ bool TimeProviderNTP::init()
 {
     logger << LOG_INFO << "Initializing NTP..." << EndLine;
     timeClient.begin();
+    _type = PRIMARY;
 
     return this->updateNTP();
 }

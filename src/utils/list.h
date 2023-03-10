@@ -92,8 +92,7 @@ public:
         // add support to array brakets [] operator
     inline T& operator[](int index); 
     inline T& operator[](size_t& i) { return this->get(i); }
-      inline const T& operator[](const size_t& i) const { return this->get(i); }
-
+    inline const T& operator[](const size_t& i) const { return this->get(i); }
 };
 
 // Initialize LinkedList with false values

@@ -24,6 +24,11 @@ class ITimeProvider {
 protected:
     Time_s datetime;
 public:
+    typedef enum {
+        PRIMARY,
+        BACKUP
+    } Type_e;
+
     /**
      * @brief Initialize the time provider.
      * 
@@ -52,6 +57,11 @@ public:
     virtual const char* getTypeName () const = 0;
 
     virtual ~ITimeProvider() {}
+
+    Type_e getType() const { return _type; }
+
+protected:
+    Type_e _type;
 };
 
 #endif // __IRRIGATION_SYSTEM_TIME_INTERFACE_H__
