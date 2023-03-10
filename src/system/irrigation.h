@@ -29,7 +29,6 @@
 #include "system/connectivity/wifi.h"
 #include "time/controller.hpp"
 
-#define KERNEL_VERSION "0.3.1"
 #define KERNEL_SERIAL_SPEED 115200
 
 class IrrigationSystem {
