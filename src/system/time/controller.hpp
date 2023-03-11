@@ -57,7 +57,7 @@ class SystemTimeProvider : public ITimeProvider {
     if (now.unixtime() == SECONDS_FROM_1970_TO_2000) {
       return false;
     }
-
+    datetime = now;
     updateBackupSourcesWithDateTime(now);
     return true;
   }
