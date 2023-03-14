@@ -74,6 +74,9 @@ private:
         if (now <= d) {
           now = d;
         }
+        if (_tp->getType() == PRIMARY) {
+          return now;
+        }
       } else {
         logger << LOG_ERROR << "Error while updating time provider!" << EndLine;
       }
