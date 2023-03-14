@@ -39,7 +39,6 @@ uint8_t I2CDevice::readByte(uint8_t regNum)
 bool I2CDevice::writeWord(uint16_t word)
 {
     uint8_t error = 0;
-    uint8_t* bytes = (uint8_t*)&word;
     bool retVal = false;
 
     Wire.beginTransmission(ADDR);

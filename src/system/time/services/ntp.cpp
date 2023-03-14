@@ -38,11 +38,11 @@ bool TimeProviderNTP::update()
 {
     bool status = this->updateNTP();
 
-    if (!status) 
+    DateTime _dateTime = DateTime(timeClient.getEpochTime());
+    if (!status  || (_dateTime.year() == 2036)) 
     {
         return false;
     }
-    DateTime _dateTime = DateTime(timeClient.getEpochTime());
     datetime.year = _dateTime.year();
     datetime.month = _dateTime.month();
     datetime.day = _dateTime.day();
