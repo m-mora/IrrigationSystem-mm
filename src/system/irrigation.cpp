@@ -6,6 +6,7 @@
 #include "relays/builder.h"
 
 SysLogger logger(nullptr);
+Storage storage;
 
 #define doUntilTimeElapsed(__time_handler, __ms_elapsed, __function) \
     static uint32_t __time_handler = 0;                              \
@@ -33,6 +34,8 @@ bool IrrigationSystem::init()
     DumpSysInfo();
 
     logger << LOG_INFO << "Initializing System..." << EndLine;
+    storage.init(NVRAM_MAX_RELAYS);
+    storage.dumpEEPROMValues();
     InitWifi();
     ScanI2CDevicesAndDumpTable();
     InitDevices();

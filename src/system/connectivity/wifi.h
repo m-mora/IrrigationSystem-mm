@@ -48,9 +48,5 @@ namespace WiFiConnection
         const char* wifi_password = WIFI_PASSWORD
         );
 
-    String getTemplate();
-    String getDeviceName();
-    String getToken();
-    
 };
 #endif // !__IRRIGATION_SYSTEM_CONNECTIVITY_WIFI_H__

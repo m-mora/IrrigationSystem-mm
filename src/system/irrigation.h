@@ -28,9 +28,11 @@
 #include "utils/logger.h"
 #include "system/connectivity/wifi.h"
 #include "time/controller.hpp"
+#include "utils/storage.h"
 #include "system/display/display.h"
 
 #define KERNEL_SERIAL_SPEED 115200
+#define NVRAM_MAX_RELAYS    4
 
 class IrrigationSystem {
     //
@@ -40,7 +42,6 @@ class IrrigationSystem {
     IOExpander ioExpander;
     Display display;
     LinkedList<WaterValve*> *relays;
-
     //
     // Private methods
     //
