@@ -28,6 +28,7 @@
 #include "utils/logger.h"
 #include "system/connectivity/wifi.h"
 #include "time/controller.hpp"
+#include "system/display/display.h"
 
 #define KERNEL_SERIAL_SPEED 115200
 
@@ -37,6 +38,7 @@ class IrrigationSystem {
     //
     SystemTimeProvider timeProviders;
     IOExpander ioExpander;
+    Display display;
     LinkedList<WaterValve*> *relays;
 
     //
@@ -48,6 +50,7 @@ class IrrigationSystem {
     void InitDevices();
     void InitSensors();
     void InitRelays();
+    void InitDisplay();
     void ConfigureTimeProviders();
 
     void ScanI2CDevicesAndDumpTable();

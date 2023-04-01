@@ -39,8 +39,7 @@ bool WaterValve::isMomentToTurnOn()
     uint8_t dayOfWeek = now.toDateTime().dayOfTheWeek();
     // Check is today on the list of days?
     isTime = (config.WeekDaysToTurnOn.Data & (1 << dayOfWeek)) != 0;
-    logger << LOG_DEBUG << "isMomentToTurnOn: isDay? " << isTime << EndLine;
-
+    logger << LOG_DEBUG << "isMomentToTurnOn: isDay? " << (isTime ? "Yes": "No") << EndLine;
     if (!isTime) {
         return isTime;
     }
@@ -53,7 +52,7 @@ bool WaterValve::isMomentToTurnOn()
     TimeSpan deltaTime = now.toDateTime() - turnOnTime.toDateTime();
 
     isTime = abs(deltaTime.totalseconds()) <= 5;
-    logger << LOG_DEBUG << "isMomentToTurnOn: isTime? " << isTime << ", rest seconds: " << deltaTime.totalseconds() << EndLine;
+    logger << LOG_DEBUG << "isMomentToTurnOn: isTime? " << isTime << ", remaining time: " << -deltaTime.hours() << ":"  << -deltaTime.minutes() << ":" << -deltaTime.seconds() << EndLine;
 
     if (!isTime) {
         return isTime;
