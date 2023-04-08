@@ -110,12 +110,12 @@ void getTime()
     timeClient.forceUpdate();
     timeClient.update();
     unsigned long utc =  timeClient.getEpochTime();
-    int tries = 0;
+    int attempts = 0;
     // this is a workaround to a bad data obtained
-    if (utc < 1630373993 && tries < 5)
+    if (utc < 1630373993 && attempts < 5)
     {
       timeClient.update();
-      tries++;
+      attempts++;
     }
     
     // Convert to local time

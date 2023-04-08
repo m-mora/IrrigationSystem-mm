@@ -2,14 +2,13 @@
 #include "utils/time_converter.h"
 #include "utils/logger.h"
 #include "../../connectivity/wifi.h"
+#include <stdint.h>
 
 // Define NTP properties
 #define NTP_OFFSET   -6 * 60 * 60    // utc offset
 #define NTP_INTERVAL 60 * 1000       // miliseconds
 #define NTP_ADDRESS  "pool.ntp.org"  // URL NTP Server
-
 #define NTP_ATTMPS  5
-#define UTC_DATE    getBuildTimeAsUnixTime (__DATE__, __TIME__)
 
 TimeProviderNTP::TimeProviderNTP() : timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL) {}
 
@@ -61,7 +60,7 @@ bool TimeProviderNTP::updateUTCTime()
     }
 
     epochUtcTime = timeClient.getEpochTime();
-    return epochUtcTime >= UTC_DATE;
+    return epochUtcTime >= BUILD_TIME_UNIX;
 }
 
 bool TimeProviderNTP::updateNTP()
@@ -73,7 +72,7 @@ bool TimeProviderNTP::updateNTP()
         return false;
     }
 
-    for(uint8 tries = 0; (tries < NTP_ATTMPS) && (!success); tries++)
+    for(uint8_t attempts = 0; (attempts < NTP_ATTMPS) && (!success); attempts++)
     {
         success = updateUTCTime();
     }

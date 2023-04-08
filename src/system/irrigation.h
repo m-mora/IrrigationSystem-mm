@@ -53,6 +53,7 @@ class IrrigationSystem {
     void InitRelays();
     void InitDisplay();
     void ConfigureTimeProviders();
+    void ConfigureNVRAM();
 
     void ScanI2CDevicesAndDumpTable();
 

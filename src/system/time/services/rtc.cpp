@@ -1,8 +1,6 @@
 #include "rtc.h"
 #include "utils/logger.h"
 
-#define MIN_UNIX_TIME getBuildTimeAsUnixTime (__DATE__, __TIME__)
-
 TimeProviderRTC::TimeProviderRTC() {}
 
 /**
@@ -33,7 +31,7 @@ bool TimeProviderRTC::init()
 bool TimeProviderRTC::update()
 {
     DateTime now    = rtc.now();
-    if (now.unixtime() < MIN_UNIX_TIME)
+    if (now.unixtime() < BUILD_TIME_UNIX)
     {
         return false;
     }

@@ -126,7 +126,7 @@ bool Storage::getPrevSavedInfo()
 {
   uint8_t isSaved = 0;
   EEPROM.get(SAVED_FLAG_START, isSaved);
-  logger << LOG_INFO << "Checking saved flag = " << INT_HEX << isSaved << EndLine;
+  logger << LOG_DEBUG << "Checking saved flag = " << INT_HEX << isSaved << EndLine;
   return (SAVED_DATA_FLAG == isSaved);
 }
 

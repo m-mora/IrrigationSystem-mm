@@ -19,8 +19,11 @@ jobs:
       - name: Install platform
         run: pio platform install espressif8266
 
-      - name: Build firmware
+      - name: Build firmware ESP12
         run: pio run -d . -e esp12e
+
+      - name: Build firmware ESP32
+        run: pio run -d . -e esp32
 
       - name: Upload firware artifact
         uses: actions/upload-artifact@v2

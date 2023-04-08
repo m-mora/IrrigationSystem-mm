@@ -82,6 +82,3 @@ wl_status_t WiFiConnection::WifiInitialize (
 
     return WL_CONNECTED;
 }
-
-
-
