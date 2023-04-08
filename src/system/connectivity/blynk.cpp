@@ -15,25 +15,34 @@
 #include "utils/logger.h"
 #include "utils/storage.h"
 
-
 static dev_conf_t temp_inf;
 static uint8 temp_relay;
 
-void KlicBlynk::init(const char *_auth) {
+void KlicBlynk::init(const char *_auth)
+{
   Blynk.config(_auth);
 }
 
-dev_conf_t getConfFromMem(uint8 _relay) {
-  uint8_t days = 0;
-  dev_conf_t t;
-  ZeroMem(&t,sizeof(dev_conf_t));
-  storage.getConfiguration(_relay, t.hora, t.min, t._, t.duration, days);
-  t.data |= (days & 0x7F);
+void KlicBlynk::run()
+{
+  Blynk.run();
+}
 
+dev_conf_t getConfFromMem(uint8 _relay)
+{
+  dev_conf_t t;
+  eeprom_map_conf_time_t r;
+  ZeroMem(&t, sizeof(dev_conf_t));
+  r = storage.getConfiguration(_relay);
+  t.hora = r.hour;
+  t.min = r.min;
+  t.duration = (r.duration / 60); // duration saved in seconds and show in min in Blynk
+  t.data |= (r.days & 0x7F);
   return t;
 }
 
-void updateScreen(dev_conf_t t) {
+void updateScreen(dev_conf_t t)
+{
 
   Blynk.virtualWrite(V0, t.lunes);
   Blynk.virtualWrite(V1, t.martes);
@@ -49,7 +58,9 @@ void updateScreen(dev_conf_t t) {
 
 // Send the current values to the app
 // send the values for relay1, relay are mutal exclusive
-BLYNK_CONNECTED() {
+BLYNK_CONNECTED()
+{
+  // set relay 1 enable and the rest disable
   Blynk.virtualWrite(V10, true);
   Blynk.virtualWrite(V11, false);
   Blynk.virtualWrite(V12, false);
@@ -59,24 +70,28 @@ BLYNK_CONNECTED() {
   updateScreen(temp_inf);
 }
 
-BLYNK_WRITE_DEFAULT() {
+BLYNK_WRITE_DEFAULT()
+{
   uint8_t pin = request.pin;
-  switch (pin) {
-    case V18:
-      // "SAVE" pin has been pressed, save the values to the
-      // corresponding relay
-      Blynk.syncAll();
-      storage.saveConfiguration(temp_relay, temp_inf.hora, temp_inf.min, 0, temp_inf.duration, (temp_inf.data & 0x7F));
-      logger << LOG_INFO << "Configuration for relay1(0) " << temp_inf.data << EndLine;
-      Blynk.virtualWrite(V18, false);
-      break;
-    default:
-      break;
+  switch (pin)
+  {
+  case V18:
+    // "SAVE" pin has been pressed, save the values to the
+    // corresponding relay
+    Blynk.syncAll();
+    storage.saveConfiguration(temp_relay, temp_inf.hora, temp_inf.min, 0, (temp_inf.duration * 60), (temp_inf.data & 0x7F));
+    logger << LOG_INFO << "Configuration for relay" << temp_relay << " = " << temp_inf.data << EndLine;
+    Blynk.virtualWrite(V18, false);
+    storage.dumpEEPROMValues();
+    break;
+  default:
+    break;
   }
 }
 
 // Select relay1, disable 2,3,4
-BLYNK_WRITE(V10) {
+BLYNK_WRITE(V10)
+{
   Blynk.virtualWrite(V11, false);
   Blynk.virtualWrite(V12, false);
   Blynk.virtualWrite(V13, false);
@@ -88,7 +103,8 @@ BLYNK_WRITE(V10) {
 }
 
 // Select relay2, disable 1,3,4
-BLYNK_WRITE(V11) {
+BLYNK_WRITE(V11)
+{
   Blynk.virtualWrite(V10, false);
   Blynk.virtualWrite(V12, false);
   Blynk.virtualWrite(V13, false);
@@ -100,7 +116,8 @@ BLYNK_WRITE(V11) {
 }
 
 // Select relay3, disable 1,2,4
-BLYNK_WRITE(V12) {
+BLYNK_WRITE(V12)
+{
   Blynk.virtualWrite(V10, false);
   Blynk.virtualWrite(V11, false);
   Blynk.virtualWrite(V13, false);
@@ -112,7 +129,8 @@ BLYNK_WRITE(V12) {
 }
 
 // Select relay4, disable 1,2,3
-BLYNK_WRITE(V13) {
+BLYNK_WRITE(V13)
+{
   Blynk.virtualWrite(V10, false);
   Blynk.virtualWrite(V11, false);
   Blynk.virtualWrite(V12, false);
@@ -123,40 +141,50 @@ BLYNK_WRITE(V13) {
   logger << LOG_INFO << "loading conf for relay4 " << temp_inf.data << EndLine;
 }
 
-BLYNK_WRITE(V0) {
+BLYNK_WRITE(V0)
+{
   temp_inf.lunes = param.asInt();
 }
 
-BLYNK_WRITE(V1) {
+BLYNK_WRITE(V1)
+{
   temp_inf.martes = param.asInt();
 }
 
-BLYNK_WRITE(V2) {
+BLYNK_WRITE(V2)
+{
   temp_inf.miercoles = param.asInt();
 }
 
-BLYNK_WRITE(V3) {
+BLYNK_WRITE(V3)
+{
   temp_inf.jueves = param.asInt();
 }
 
-BLYNK_WRITE(V4) {
+BLYNK_WRITE(V4)
+{
   temp_inf.viernes = param.asInt();
 }
-BLYNK_WRITE(V5) {
+BLYNK_WRITE(V5)
+{
   temp_inf.sabado = param.asInt();
 }
-BLYNK_WRITE(V6) {
+BLYNK_WRITE(V6)
+{
   temp_inf.domingo = param.asInt();
 }
 
-BLYNK_WRITE(V7) {
+BLYNK_WRITE(V7)
+{
   temp_inf.hora = param.asInt();
 }
 
-BLYNK_WRITE(V8) {
+BLYNK_WRITE(V8)
+{
   temp_inf.min = param.asInt();
 }
 
-BLYNK_WRITE(V9) {
+BLYNK_WRITE(V9)
+{
   temp_inf.duration = param.asInt();
 }

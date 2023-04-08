@@ -59,7 +59,7 @@ void Storage::init(int _num_relays)
 bool Storage::saveCredentials(String templateID, String templateName, String authToken)
 {
   EEPROM_CredentialStorage_t d;
-  ZeroMem(&d,sizeof(EEPROM_CredentialStorage_t));
+  ZeroMem(&d, sizeof(EEPROM_CredentialStorage_t));
   strcpy(d._templateid, templateID.c_str());
   strcpy(d._templateName, templateName.c_str());
   strcpy(d._authToken, authToken.c_str());
@@ -97,9 +97,9 @@ bool Storage::getCredentials(String templateID, String templateName, String auth
     templateName = d._templateName;
     authToken = d._authToken;
 
-    logger << LOG_INFO << "templateID " << templateID << EndLine;
-    logger << LOG_INFO << "templateName " << templateName << EndLine;
-    logger << LOG_INFO << "authToken " << authToken << EndLine;
+    logger << LOG_DEBUG << "templateID " << templateID << EndLine;
+    logger << LOG_DEBUG << "templateName " << templateName << EndLine;
+    logger << LOG_DEBUG << "authToken " << authToken << EndLine;
   }
   else
   {
@@ -111,16 +111,10 @@ bool Storage::getCredentials(String templateID, String templateName, String auth
   return true;
 }
 
-bool Storage::getConfiguration(int relayID, uint8_t hour, uint8_t minute, uint8_t second, uint8_t duration, uint8_t days)
+eeprom_map_conf_time_t Storage::getConfiguration(int relayID)
 {
   EEPROM.get(CONF_MEM_START + (sizeof(eeprom_map_conf_time_t) * relayID), relayConfigTime);
-  hour = relayConfigTime.hour;
-  minute = relayConfigTime.min;
-  second = relayConfigTime.sec;
-  duration = relayConfigTime.duration;
-  days = relayConfigTime.days;
-
-  return true;
+  return relayConfigTime;
 }
 
 bool Storage::getPrevSavedInfo()
@@ -162,4 +156,21 @@ void Storage::dumpEEPROMValues()
   }
 
   logger << EndLine;
+}
+
+String Storage::getToken()
+{
+  EEPROM_CredentialStorage_t d;
+  // Check if info was saved previously, if not return empty strings
+  if (getPrevSavedInfo())
+  {
+    // Credentials are on the bottom of the reserved memory, use address 0
+    EEPROM.get(0, d);
+    authToken = d._authToken;
+  }
+  else
+  {
+    authToken = "";
+  }
+  return authToken;
 }
