@@ -30,6 +30,7 @@
 #include "time/controller.hpp"
 #include "utils/storage.h"
 #include "system/display/display.h"
+#include "system/connectivity/blynk.h"
 
 #define KERNEL_SERIAL_SPEED 115200
 #define NVRAM_MAX_RELAYS    4
@@ -41,6 +42,7 @@ class IrrigationSystem {
     SystemTimeProvider timeProviders;
     IOExpander ioExpander;
     Display display;
+    KlicBlynk kBlynk;
     LinkedList<WaterValve*> *relays;
     //
     // Private methods
@@ -52,6 +54,7 @@ class IrrigationSystem {
     void InitSensors();
     void InitRelays();
     void InitDisplay();
+    void InitBlynk();
     void ConfigureTimeProviders();
     void ConfigureNVRAM();
 

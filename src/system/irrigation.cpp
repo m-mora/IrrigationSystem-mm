@@ -189,3 +189,11 @@ void IrrigationSystem::ConfigureNVRAM() {
   storage.init(NVRAM_MAX_RELAYS);
   storage.dumpEEPROMValues();
 }
+}
+
+void IrrigationSystem::InitBlynk()
+{
+    String tempID, deviceName, token;
+    storage.getCredentials(tempID,deviceName, token);
+    kBlynk.init(token.c_str());
+}
