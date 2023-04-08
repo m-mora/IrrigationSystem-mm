@@ -45,6 +45,7 @@ void Storage::init(int _num_relays)
   }
   EEPROM.commit();
 }
+
 /*
  * Save them in the simulated EEPROM
  * |------------| 0x0

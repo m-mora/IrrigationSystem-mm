@@ -19,18 +19,6 @@
 #define __SYSTEM_CONNECTIVITY_BLYNK_H__
 
 #include  <Arduino.h>
-
-#if ARDUINO_ARCH_ESP32
-#include <WiFi.h>
-#include <BlynkSimpleEsp32.h>
-#include <WiFiClient.h>
-#elif ARDUINO_ARCH_ESP8266
-#include <ESP8266WiFi.h>
-#include <BlynkSimpleEsp8266.h>
-#else
-#error "Unsupported ARDUINO architecture"
-#endif
-
 #include "system/time/datetime.h"
 #include "utils/logger.h"
 
@@ -41,6 +29,7 @@
 #define RELAY3 2
 #define RELAY4 3
 
+#pragma pack(push, 1)
 typedef struct {
     uint32_t lunes:1;
     uint32_t martes:1;
@@ -52,18 +41,13 @@ typedef struct {
     uint32_t hora:5;
     uint32_t min:6;
     uint32_t duration:4;
+    uint32_t _: 10;
 } dev_conf_t;
+#pragma pack(pop)
 
 namespace KlicBlynk
 {
-    void init(const char* _auth) {
-        Blynk.config(_auth);
-    }
-
-    void run() {
-        Blynk.run();
-    }
-};
-
+    void init(const char* _auth);
+}
 
 #endif // __SYSTEM_CONNECTIVITY_BLYNK_H__

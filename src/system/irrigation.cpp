@@ -4,7 +4,11 @@
 
 #include "connectivity/wifi.h"
 #include "relays/builder.h"
+<<<<<<< HEAD
 #include "utils/logger.h"
+=======
+#include "system/connectivity/blynk.h"
+>>>>>>> 3e1ffd2 (Solve linker issues)
 
 SysLogger logger(nullptr);
 Storage storage;
@@ -194,6 +198,6 @@ void IrrigationSystem::ConfigureNVRAM() {
 void IrrigationSystem::InitBlynk()
 {
     String tempID, deviceName, token;
-    storage.getCredentials(tempID,deviceName, token);
-    kBlynk.init(token.c_str());
+    storage.getCredentials(tempID, deviceName, token);
+    KlicBlynk::init(token.c_str());
 }
