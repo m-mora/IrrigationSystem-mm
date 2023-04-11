@@ -30,19 +30,36 @@
 #define RELAY4 3
 
 #pragma pack(push, 1)
-typedef struct {
-    uint32_t lunes:1;
-    uint32_t martes:1;
-    uint32_t miercoles:1;
-    uint32_t jueves:1;
-    uint32_t viernes:1;
-    uint32_t sabado:1;
-    uint32_t domingo:1;
-    uint32_t hora:5;
-    uint32_t min:6;
-    uint32_t duration:4;
-    uint32_t _: 10;
+// typedef struct {
+//     uint32_t lunes:1;
+//     uint32_t martes:1;
+//     uint32_t miercoles:1;
+//     uint32_t jueves:1;
+//     uint32_t viernes:1;
+//     uint32_t sabado:1;
+//     uint32_t domingo:1;
+//     uint32_t hora:5;
+//     uint32_t min:6;
+//     uint32_t duration:4;
+//     uint32_t _: 10;
+// } dev_conf_t;
+typedef union {
+    struct {
+        uint32_t lunes:1;
+        uint32_t martes:1;
+        uint32_t miercoles:1;
+        uint32_t jueves:1;
+        uint32_t viernes:1;
+        uint32_t sabado:1;
+        uint32_t domingo:1;
+        uint32_t hora:5;
+        uint32_t min:6;
+        uint32_t duration:4;
+        uint32_t _: 10;
+    };
+    uint32_t data;
 } dev_conf_t;
+
 #pragma pack(pop)
 
 namespace KlicBlynk

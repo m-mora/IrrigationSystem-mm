@@ -1,5 +1,6 @@
 #include "water_valve.h"
 #include "utils/logger.h"
+#include "utils/storage.h"
 
 void WaterValve::set_config(IORelayConfig_t new_config)
 {
@@ -8,11 +9,18 @@ void WaterValve::set_config(IORelayConfig_t new_config)
 
 void WaterValve::update()
 {
+    uint8_t hour =0, minute = 0, second = 0, duration = 0, days = 0;
+
     if (device == NULL)
     {
         logger << LOG_ERROR << "Device pointer is NULL" << EndLine;
         return;
     }
+
+    storage.getConfiguration(this->position,hour,minute,second,duration,days);
+    config.timeToTurnOn = Time_s (0, 0, 0, hour, minute, second);
+    config.WeekDaysToTurnOn.Data = days;
+    config.turnOnDuration = duration;
 
     if (this->state && isTurnOnDurationTimeOver())
     {

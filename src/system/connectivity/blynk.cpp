@@ -12,8 +12,10 @@
 #endif
 
 #include "utils/mem.h"
+#include "utils/logger.h"
+#include "utils/storage.h"
 
-static dev_conf_t inf[4];
+
 static dev_conf_t temp_inf;
 static uint8 temp_relay;
 
@@ -21,25 +23,40 @@ void KlicBlynk::init(const char *_auth) {
   Blynk.config(_auth);
 }
 
+dev_conf_t getConfFromMem(uint8 _relay) {
+  uint8_t days = 0;
+  dev_conf_t t;
+  ZeroMem(&t,sizeof(dev_conf_t));
+  storage.getConfiguration(_relay, t.hora, t.min, t._, t.duration, days);
+  t.data |= (days & 0x7F);
+
+  return t;
+}
+
+void updateScreen(dev_conf_t t) {
+
+  Blynk.virtualWrite(V0, t.lunes);
+  Blynk.virtualWrite(V1, t.martes);
+  Blynk.virtualWrite(V2, t.miercoles);
+  Blynk.virtualWrite(V3, t.jueves);
+  Blynk.virtualWrite(V4, t.viernes);
+  Blynk.virtualWrite(V5, t.sabado);
+  Blynk.virtualWrite(V6, t.domingo);
+  Blynk.virtualWrite(V7, t.hora);
+  Blynk.virtualWrite(V8, t.min);
+  Blynk.virtualWrite(V9, t.duration);
+}
+
 // Send the current values to the app
 // send the values for relay1, relay are mutal exclusive
 BLYNK_CONNECTED() {
-  // TODO: Load NVRAM configuration
-
   Blynk.virtualWrite(V10, true);
   Blynk.virtualWrite(V11, false);
   Blynk.virtualWrite(V12, false);
   Blynk.virtualWrite(V13, false);
-  Blynk.virtualWrite(V0, inf[0].lunes);
-  Blynk.virtualWrite(V1, inf[0].martes);
-  Blynk.virtualWrite(V2, inf[0].miercoles);
-  Blynk.virtualWrite(V3, inf[0].jueves);
-  Blynk.virtualWrite(V4, inf[0].viernes);
-  Blynk.virtualWrite(V5, inf[0].sabado);
-  Blynk.virtualWrite(V6, inf[0].domingo);
-  Blynk.virtualWrite(V7, inf[0].hora);
-  Blynk.virtualWrite(V8, inf[0].min);
-  Blynk.virtualWrite(V9, inf[0].duration);
+  // Update the screen with values for relay 1
+  temp_inf = getConfFromMem(RELAY1);
+  updateScreen(temp_inf);
 }
 
 BLYNK_WRITE_DEFAULT() {
@@ -49,26 +66,8 @@ BLYNK_WRITE_DEFAULT() {
       // "SAVE" pin has been pressed, save the values to the
       // corresponding relay
       Blynk.syncAll();
-      inf[temp_relay].lunes = temp_inf.lunes;
-      inf[temp_relay].martes = temp_inf.martes;
-      inf[temp_relay].miercoles = temp_inf.miercoles;
-      inf[temp_relay].jueves = temp_inf.jueves;
-      inf[temp_relay].viernes = temp_inf.viernes;
-      inf[temp_relay].sabado = temp_inf.sabado;
-      inf[temp_relay].domingo = temp_inf.domingo;
-      inf[temp_relay].hora = temp_inf.hora;
-      inf[temp_relay].min = temp_inf.min;
-      inf[temp_relay].duration = temp_inf.duration;
-      // Serial.printf("\nConfiguration for relay %u is\n",(temp_relay + 1));
-      // Serial.printf("Lunes = %u ",temp_inf.lunes);
-      // Serial.printf("martes = %u ",temp_inf.martes);
-      // Serial.printf("miercoles = %u ",temp_inf.miercoles);
-      // Serial.printf("jueves = %u ",temp_inf.jueves);
-      // Serial.printf("viernes = %u ",temp_inf.viernes);
-      // Serial.printf("sabado = %u ",temp_inf.sabado);
-      // Serial.printf("domingo = %u ",temp_inf.domingo);
-      // Serial.printf("\n%2u:%2u for %u
-      // minutes\n",temp_inf.hora,temp_inf.min,temp_inf.duration);
+      storage.saveConfiguration(temp_relay, temp_inf.hora, temp_inf.min, 0, temp_inf.duration, (temp_inf.data & 0x7F));
+      logger << LOG_INFO << "Configuration for relay1(0) " << temp_inf.data << EndLine;
       Blynk.virtualWrite(V18, false);
       break;
     default:
@@ -82,6 +81,10 @@ BLYNK_WRITE(V10) {
   Blynk.virtualWrite(V12, false);
   Blynk.virtualWrite(V13, false);
   temp_relay = RELAY1;
+  // update the screen with current values
+  temp_inf = getConfFromMem(temp_relay);
+  updateScreen(temp_inf);
+  logger << LOG_INFO << "loading conf for relay1(0) " << temp_inf.data << EndLine;
 }
 
 // Select relay2, disable 1,3,4
@@ -90,6 +93,10 @@ BLYNK_WRITE(V11) {
   Blynk.virtualWrite(V12, false);
   Blynk.virtualWrite(V13, false);
   temp_relay = RELAY2;
+  // update the screen with current values
+  temp_inf = getConfFromMem(temp_relay);
+  updateScreen(temp_inf);
+  logger << LOG_INFO << "loading conf for relay2 " << temp_inf.data << EndLine;
 }
 
 // Select relay3, disable 1,2,4
@@ -98,6 +105,10 @@ BLYNK_WRITE(V12) {
   Blynk.virtualWrite(V11, false);
   Blynk.virtualWrite(V13, false);
   temp_relay = RELAY3;
+  // update the screen with current values
+  temp_inf = getConfFromMem(temp_relay);
+  updateScreen(temp_inf);
+  logger << LOG_INFO << "loading conf for relay3 " << temp_inf.data << EndLine;
 }
 
 // Select relay4, disable 1,2,3
@@ -106,52 +117,46 @@ BLYNK_WRITE(V13) {
   Blynk.virtualWrite(V11, false);
   Blynk.virtualWrite(V12, false);
   temp_relay = RELAY4;
+  // update the screen with current values
+  temp_inf = getConfFromMem(temp_relay);
+  updateScreen(temp_inf);
+  logger << LOG_INFO << "loading conf for relay4 " << temp_inf.data << EndLine;
 }
 
 BLYNK_WRITE(V0) {
   temp_inf.lunes = param.asInt();
-  // Serial.printf("Valor en Lunes = %d",pinValue);
-  // digitalWrite(LED_BUILTIN, pinValue);
 }
 
 BLYNK_WRITE(V1) {
   temp_inf.martes = param.asInt();
-  //  Serial.printf("Valor en Martes = %d",pinValue);
 }
 
 BLYNK_WRITE(V2) {
   temp_inf.miercoles = param.asInt();
-  //  Serial.printf("Valor en Miercoles = %d",pinValue);
 }
 
 BLYNK_WRITE(V3) {
-  //  Serial.printf("Valor en Jueves = %d",pinValue);
+  temp_inf.jueves = param.asInt();
 }
 
 BLYNK_WRITE(V4) {
   temp_inf.viernes = param.asInt();
-  //  Serial.printf("Valor en Viernes = %d",pinValue);
 }
 BLYNK_WRITE(V5) {
   temp_inf.sabado = param.asInt();
-  //  Serial.printf("Valor en Sabado = %d",pinValue);
 }
 BLYNK_WRITE(V6) {
   temp_inf.domingo = param.asInt();
-  //  Serial.printf("Valor en Domingo = %d",pinValue);
 }
 
 BLYNK_WRITE(V7) {
   temp_inf.hora = param.asInt();
-  // Serial.printf("Valor en Horas = %d",pinValue);
 }
 
 BLYNK_WRITE(V8) {
   temp_inf.min = param.asInt();
-  // Serial.printf("Valor en Minutos = %d",pinValue);
 }
 
 BLYNK_WRITE(V9) {
   temp_inf.duration = param.asInt();
-  // Serial.printf("Valor en Duracion = %d",pinValue);
 }

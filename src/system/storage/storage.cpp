@@ -79,7 +79,7 @@ bool Storage::saveConfiguration(int relayID, uint8_t hour, uint8_t minute, uint8
   relayConfigTime.duration = duration;
   relayConfigTime.days = days;
 
-  EEPROM.put(CONF_MEM_START * relayID, relayConfigTime);
+  EEPROM.put(CONF_MEM_START + (sizeof(eeprom_map_conf_time_t) * relayID), relayConfigTime);
   EEPROM.commit();
 
   return true;

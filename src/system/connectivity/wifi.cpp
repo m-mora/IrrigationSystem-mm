@@ -71,6 +71,10 @@ wl_status_t WiFiConnection::WifiInitialize (
         // if the credentials were not set, reset all wifi configuration
         wm.resetSettings();
     }
+
+    //
+    // wm.resetSettings();
+
     // Set the ESP as AccesPoint
     WiFi.mode(WIFI_STA);
 
