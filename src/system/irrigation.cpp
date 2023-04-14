@@ -123,6 +123,14 @@ void IrrigationSystem::InitRelays() {
                .duration(40)
                .done()
                ->build();
+  // TODO: need to change the way it is saving once it is refactored
+  if (!storage.getPrevSavedInfo()) {
+    storage.saveConfiguration(0, 20, 50, 0, 20, ALL_WEEK);
+    storage.saveConfiguration(1, 20, 53, 0, 30, ALL_WEEK);
+    storage.saveConfiguration(2, 20, 54, 0, 35, ALL_WEEK);
+    storage.saveConfiguration(3, 20, 55, 0, 40, ALL_WEEK);
+  }
+  storage.dumpEEPROMValues();
   logger << LOG_INFO << LOGGER_TEXT_GREEN << "Done!" << EndLine;
 }
 
