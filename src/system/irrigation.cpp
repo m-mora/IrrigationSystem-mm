@@ -6,6 +6,7 @@
 #include "relays/builder.h"
 #include "utils/logger.h"
 #include "system/connectivity/blynk.h"
+#include "utils/logger.h"
 
 SysLogger logger(nullptr);
 Storage storage;
@@ -127,6 +128,14 @@ void IrrigationSystem::InitRelays() {
                .duration(40)
                .done()
                ->build();
+  // TODO: need to change the way it is saving once it is refactored
+  if (!storage.getPrevSavedInfo()) {
+    storage.saveConfiguration(0, 20, 50, 0, 20, ALL_WEEK);
+    storage.saveConfiguration(1, 20, 53, 0, 30, ALL_WEEK);
+    storage.saveConfiguration(2, 20, 54, 0, 35, ALL_WEEK);
+    storage.saveConfiguration(3, 20, 55, 0, 40, ALL_WEEK);
+  }
+  storage.dumpEEPROMValues();
   logger << LOG_INFO << LOGGER_TEXT_GREEN << "Done!" << EndLine;
 }
 
@@ -193,10 +202,8 @@ void IrrigationSystem::ConfigureNVRAM() {
   storage.init(NVRAM_MAX_RELAYS);
   storage.dumpEEPROMValues();
 }
-}
 
-void IrrigationSystem::InitBlynk()
-{
+void IrrigationSystem::InitBlynk() {
   String t;
   logger << LOG_INFO << "Starting blynk" << EndLine;
   t = storage.getToken();
