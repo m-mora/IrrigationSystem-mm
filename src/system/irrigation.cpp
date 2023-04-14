@@ -6,7 +6,6 @@
 #include "relays/builder.h"
 #include "utils/logger.h"
 #include "system/connectivity/blynk.h"
-#include "utils/logger.h"
 
 SysLogger logger(nullptr);
 Storage storage;
@@ -34,8 +33,6 @@ bool IrrigationSystem::init() {
 
   logger << LOG_INFO << "Initializing System..." << EndLine;
   ConfigureNVRAM();
-  storage.init(NVRAM_MAX_RELAYS);
-  storage.dumpEEPROMValues();
   InitWifi();
   ScanI2CDevicesAndDumpTable();
   InitDevices();
