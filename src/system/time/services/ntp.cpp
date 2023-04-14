@@ -60,7 +60,7 @@ bool TimeProviderNTP::updateUTCTime()
     }
 
     epochUtcTime = timeClient.getEpochTime();
-    return epochUtcTime >= BUILD_TIME_UNIX;
+    return epochUtcTime >= BUILD_TIME_UNIX - 21600; //TODO: fix the compiler time to considere time zone offset
 }
 
 bool TimeProviderNTP::updateNTP()

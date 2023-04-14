@@ -31,7 +31,7 @@ bool TimeProviderRTC::init()
 bool TimeProviderRTC::update()
 {
     DateTime now    = rtc.now();
-    if (now.unixtime() < BUILD_TIME_UNIX)
+    if (now.unixtime() < BUILD_TIME_UNIX - 21600) //TODO: fix the compiler time to considere time zone offset
     {
         return false;
     }
