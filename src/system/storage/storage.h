@@ -67,7 +67,7 @@ public:
   void init(int _num_relays);
   bool saveCredentials(String templateID, String templateName, String authToken);
   bool saveConfiguration(int relayID, uint8_t hour, uint8_t minute, uint8_t second, uint32_t duration, uint8_t days);
-  bool getCredentials(String templateID, String templateName, String authToken);
+  bool getCredentials(String& chatId, String& telegramToken, String& authToken);
   bool getPrevSavedInfo();
   void setPrevSavedInfo();
   eeprom_map_conf_time_t getConfiguration(int relayID);

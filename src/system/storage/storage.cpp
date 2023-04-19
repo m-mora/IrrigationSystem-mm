@@ -52,12 +52,11 @@ void Storage::init(int _num_relays)
  * | auth_token |
  * |------------|
  */
-bool Storage::saveCredentials(String templateID, String templateName, String authToken)
-{
+bool Storage::saveCredentials(String chatID, String telegramToken, String authToken) {
   EEPROM_CredentialStorage_t d;
   ZeroMem(&d, sizeof(EEPROM_CredentialStorage_t));
-  strcpy(d._chatid, templateID.c_str());
-  strcpy(d._telegramToken, templateName.c_str());
+  strcpy(d._chatid, chatID.c_str());
+  strcpy(d._telegramToken, telegramToken.c_str());
   strcpy(d._authToken, authToken.c_str());
   EEPROM.put(offsetof(EEPROM_CredentialStorage_t, _chatid), d);
 
@@ -80,8 +79,7 @@ bool Storage::saveConfiguration(int relayID, uint8_t hour, uint8_t minute, uint8
   return true;
 }
 
-bool Storage::getCredentials(String chatId, String telegramToken, String authToken)
-{
+bool Storage::getCredentials(String& chatId, String& telegramToken, String& authToken) {
   EEPROM_CredentialStorage_t d;
   // Check if info was saved previously, if not return empty strings
   if (getPrevSavedInfo())
