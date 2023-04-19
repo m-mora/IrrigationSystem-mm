@@ -45,6 +45,7 @@ bool IrrigationSystem::init()
   InitRelays();
   InitDisplay();
   InitBlynk();
+  InitTelegram();
   logger << LOG_INFO << "Initialization finished!" << EndLine;
 
   return IsSystemInitializedAtMinimal();
@@ -230,4 +231,10 @@ void IrrigationSystem::InitBlynk()
   char *token = new char[t.length() + 1];
   strcpy(token, t.c_str());
   KlicBlynk::init(token);
+}
+
+void IrrigationSystem::InitTelegram() {
+  String telegram_token, chat_id, b_token;
+  storage.getCredentials(chat_id,telegram_token,b_token);
+  Telegram::init(telegram_token,chat_id);
 }

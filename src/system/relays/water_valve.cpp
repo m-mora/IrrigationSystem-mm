@@ -2,6 +2,7 @@
 #include "utils/logger.h"
 #include "utils/storage.h"
 #include "system/connectivity/blynk.h"
+#include "system/connectivity/telegram.h"
 
 void WaterValve::set_config(IORelayConfig_t new_config)
 {
@@ -80,6 +81,7 @@ bool WaterValve::isMomentToTurnOn()
 
 void WaterValve::turnOffRelay()
 {
+  String m;
   config.systemData->Sensors.isAnyValveOn = false;
   this->turn_off();
   logger << LOG_INFO << "Turning off relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
@@ -88,11 +90,15 @@ void WaterValve::turnOffRelay()
     logger << LOG_DEBUG << " Calling Voltage Relay in pos " << config.voltageRelay->getPosition() << EndLine;
     config.voltageRelay->turn_off();
     KlicBlynk::showStatus(position, false);
+    m = "Turn Off Valve ";
+    m.concat(position + 1);
+    Telegram::message(m);
   };
 }
 
 void WaterValve::turnOnRelay()
 {
+  String m;
   config.systemData->Sensors.isAnyValveOn = true;
   storedTurnOnTime = config.timeProvider->get().toDateTime();
   if (config.voltageRelay)
@@ -103,4 +109,7 @@ void WaterValve::turnOnRelay()
   logger << LOG_INFO << "Turning on relay " << (uint8_t)position << " on IO addr 0x" << INT_HEX << device->getAddress() << EndLine;
   this->turn_on();
   KlicBlynk::showStatus(position, true);
+  m = "Turn On Valve ";
+  m.concat(position + 1);
+  Telegram::message(m);
 }
