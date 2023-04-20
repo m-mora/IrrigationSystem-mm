@@ -28,10 +28,8 @@ void setup() {
         logger << LOG_ERROR << "Setup failied! can't run irrigation system" << EndLine;
         while (1) ;
     }
-
-    iSys.run();
 }
 
 void loop() {
-
+    iSys.update();
 }

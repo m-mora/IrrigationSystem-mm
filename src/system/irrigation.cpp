@@ -50,32 +50,26 @@ bool IrrigationSystem::init()
   return IsSystemInitializedAtMinimal();
 }
 
-void IrrigationSystem::run()
-{
-  while (true)
-  {
-    Status.sysMilliseconds = millis();
-    KlicBlynk::run();
+void IrrigationSystem::update() {
+  Status.sysMilliseconds = millis();
+  KlicBlynk::run();
 
-    doUntilTimeElapsed(__update_rtc_handler, 1000, {
-      timeProviders.update();
-      logger << LOG_INFO << "Now:  " << timeProviders.get().toString()
-             << EndLine;
-      display.update(timeProviders.get().toString());
-      WaterValve *relay = NULL;
-      for (int i = 0; i < relays->size(); i++)
-      {
-        relay = relays->get(i);
-        if (relay == NULL)
-        {
-          logger << LOG_WARN << "Found NULL instances while updating relays"
-                 << EndLine;
-          continue;
-        }
-        relay->update();
+  doUntilTimeElapsed(__update_rtc_handler, 1000, {
+    timeProviders.update();
+    logger << LOG_INFO << "Now:  " << timeProviders.get().toString()
+            << EndLine;
+    display.update(timeProviders.get().toString());
+    WaterValve *relay = NULL;
+    for (int i = 0; i < relays->size(); i++) {
+      relay = relays->get(i);
+      if (relay == NULL) {
+        logger << LOG_WARN << "Found NULL instances while updating relays"
+                << EndLine;
+        continue;
       }
-    });
-  }
+      relay->update();
+    }
+  });
 }
 
 void IrrigationSystem::DumpSysInfo()

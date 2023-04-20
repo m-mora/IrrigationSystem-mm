@@ -67,7 +67,7 @@ class IrrigationSystem {
 public:
     IrrigationSystem();
     bool init();
-    void run();
+    void update();
 };
 
 #endif // __IRRIGATION_SYSTEM_H__

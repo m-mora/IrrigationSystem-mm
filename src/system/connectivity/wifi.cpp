@@ -80,6 +80,8 @@ wl_status_t WiFiConnection::WifiInitialize (
     // Set the ESP as AccesPoint
     WiFi.mode(WIFI_STA);
 
+    wm.setConnectTimeout(20);
+    wm.setConfigPortalTimeout(30);
     // will try to connect when it has saved credentials
     // if it fails will start the access point
     if (wm.autoConnect(wifi_ssid,wifi_password)){

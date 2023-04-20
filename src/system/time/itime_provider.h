@@ -60,8 +60,11 @@ public:
 
     Type_e getType() const { return _type; }
 
+    uint32_t getSecondsThreshold() const { return _secondsThreshold; }
+
 protected:
     Type_e _type;
+    uint32_t _secondsThreshold;
 };
 
 #endif // __IRRIGATION_SYSTEM_TIME_INTERFACE_H__
