@@ -2,33 +2,34 @@
 #include "utils/logger.h"
 #include "utils/storage.h"
 
-#define WIFI_MANAGER_PARAMETER_SIZE 20
+#define WIFI_MANAGER_CHATID_SIZE    10
 #define WIFI_MANAGER_AUTHTOKEN_SIZE 40
+#define WIFI_TELEGRAM_TOKEN_SIZE    48
 
 static WiFiManager wm;
 using namespace WiFiConnection;
 
-static String templateID;
-static String deviceName;
+static String chat_id;
+static String telegram_token;
 static String token;
 
 static void saveConfigCallback()
 {
-    if((wm.server->hasArg("template_id")) && (wm.server->hasArg("device_name")) && (wm.server->hasArg("auth_token")))
+    if((wm.server->hasArg("chat_id")) && (wm.server->hasArg("telegram_token")) && (wm.server->hasArg("auth_token")))
     {
-        templateID = wm.server->arg("template_id");
-        deviceName = wm.server->arg("device_name");
+        chat_id = wm.server->arg("chat_id");
+        telegram_token = wm.server->arg("telegram_token");
         token = wm.server->arg("auth_token");
-        logger << LOG_INFO << "TemplateID = " << templateID << EndLine;
-        logger << LOG_INFO << "Device Name = " << deviceName << EndLine;
+        logger << LOG_INFO << "chat_id = " << chat_id << EndLine;
+        logger << LOG_INFO << "telegram_token = " << telegram_token << EndLine;
         logger << LOG_INFO << "Token = " << token << EndLine;
 
-        storage.saveCredentials(templateID,deviceName,token);
+        storage.saveCredentials(chat_id,telegram_token,token);
         storage.setPrevSavedInfo();
     } else {
         logger << LOG_ERROR << "At least one of the configuration is missing" << EndLine;
-        logger << LOG_ERROR << "TemplateID " << wm.server->hasArg("template_id") << EndLine;
-        logger << LOG_ERROR << "Device ID " << wm.server->hasArg("device_name") << EndLine;
+        logger << LOG_ERROR << "chat_id " << wm.server->hasArg("chat_id") << EndLine;
+        logger << LOG_ERROR << "telegram_token " << wm.server->hasArg("telegram_token") << EndLine;
         logger << LOG_ERROR << "Token " << wm.server->hasArg("auth_token") << EndLine;
     }
 
@@ -46,18 +47,20 @@ wl_status_t WiFiConnection::WifiInitialize (
     const char* wifi_password
     )
 {
-    String templ_id,dev_name, auth_token = "";
+    String chat_id = "";
+    String telegram_token = "";
+    String auth_token = "";
     // if there was not saved information, will return clean strings
-    storage.getCredentials(templ_id,dev_name,auth_token);
+    storage.getCredentials(chat_id,telegram_token,auth_token);
 
     logger << LOG_INFO << "Initializing WiFi provider!" << EndLine;
     // parameters  = ID, label, default_value, size
-    WiFiManagerParameter templateID("template_id", "TEMPLATE_ID", templ_id.c_str(), WIFI_MANAGER_PARAMETER_SIZE);
-    WiFiManagerParameter deviceName("device_name", "DEVICE_NAME", dev_name.c_str(), WIFI_MANAGER_PARAMETER_SIZE);
+    WiFiManagerParameter chatId("chat_id", "CHAT_ID", chat_id.c_str(), WIFI_MANAGER_CHATID_SIZE);
+    WiFiManagerParameter telegramToken("telegram_token", "TELEGRAM_TOKEN", telegram_token.c_str(), WIFI_TELEGRAM_TOKEN_SIZE);
     WiFiManagerParameter authToken("auth_token", "AUTH_TOKEN", auth_token.c_str(), WIFI_MANAGER_AUTHTOKEN_SIZE);
 
-    wm.addParameter(&templateID);
-    wm.addParameter(&deviceName);
+    wm.addParameter(&chatId);
+    wm.addParameter(&telegramToken);
     wm.addParameter(&authToken);
 
     wm.setSaveParamsCallback(saveConfigCallback);
@@ -71,6 +74,9 @@ wl_status_t WiFiConnection::WifiInitialize (
         // if the credentials were not set, reset all wifi configuration
         wm.resetSettings();
     }
+#ifdef RESET_WIFI
+    wm.resetSettings();
+#endif
     // Set the ESP as AccesPoint
     WiFi.mode(WIFI_STA);
 

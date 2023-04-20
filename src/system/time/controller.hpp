@@ -42,11 +42,10 @@ class SystemTimeProvider : public ITimeProvider {
                << LOGGER_TEXT_GREEN << " Success" << EndLine;
         index++;
       } else {
-        providers.remove(index);
         success = false;
         logger << LOG_ERROR << "  - Init " << _tp->getTypeName()
                << LOGGER_TEXT_RED << " Failure!" << EndLine;
-        delete _tp;
+        providers.remove(index);
       }
     }
     return success;

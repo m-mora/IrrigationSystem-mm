@@ -5,28 +5,33 @@
 #include "connectivity/wifi.h"
 #include "relays/builder.h"
 #include "utils/logger.h"
+#include "system/connectivity/blynk.h"
 
 SysLogger logger(nullptr);
 Storage storage;
 
 #define doUntilTimeElapsed(__time_handler, __ms_elapsed, __function) \
   static uint32_t __time_handler = 0;                                \
-  if (__time_handler > millis()) {                                   \
+  if (__time_handler > millis())                                     \
+  {                                                                  \
     __time_handler = millis();                                       \
   }                                                                  \
-  if ((millis() - __time_handler) > __ms_elapsed) {                  \
+  if ((millis() - __time_handler) > __ms_elapsed)                    \
+  {                                                                  \
     __time_handler = millis();                                       \
     __function                                                       \
   }
 
-IrrigationSystem::IrrigationSystem() {
+IrrigationSystem::IrrigationSystem()
+{
   Status.Sensors.humidityLevel = 0.0f;
   Status.Sensors.isAnyValveOn = false;
   Status.Sensors.isPresenceDetected = false;
   Status.Sensors.isRaining = false;
 }
 
-bool IrrigationSystem::init() {
+bool IrrigationSystem::init()
+{
   InitLogger();
   DumpSysInfo();
 
@@ -39,14 +44,18 @@ bool IrrigationSystem::init() {
   InitSensors();
   InitRelays();
   InitDisplay();
+  InitBlynk();
   logger << LOG_INFO << "Initialization finished!" << EndLine;
 
   return IsSystemInitializedAtMinimal();
 }
 
-void IrrigationSystem::run() {
-  while (true) {
+void IrrigationSystem::run()
+{
+  while (true)
+  {
     Status.sysMilliseconds = millis();
+    KlicBlynk::run();
 
     doUntilTimeElapsed(__update_rtc_handler, 1000, {
       timeProviders.update();
@@ -54,9 +63,11 @@ void IrrigationSystem::run() {
              << EndLine;
       display.update(timeProviders.get().toString());
       WaterValve *relay = NULL;
-      for (int i = 0; i < relays->size(); i++) {
+      for (int i = 0; i < relays->size(); i++)
+      {
         relay = relays->get(i);
-        if (relay == NULL) {
+        if (relay == NULL)
+        {
           logger << LOG_WARN << "Found NULL instances while updating relays"
                  << EndLine;
           continue;
@@ -67,7 +78,8 @@ void IrrigationSystem::run() {
   }
 }
 
-void IrrigationSystem::DumpSysInfo() {
+void IrrigationSystem::DumpSysInfo()
+{
   logger << LOG_MASTER << EndLine << LOGGER_TEXT_BOLD << LOGGER_TEXT_YELLOW
          << "--------------------------------------------------------\n"
          << "            _   __ _     _____ _____       \n"
@@ -81,7 +93,8 @@ void IrrigationSystem::DumpSysInfo() {
          << LOG_MASTER << "Build date: " << Time_s(BUILD_TIME_UNIX).toString() << EndLine;
 }
 
-void IrrigationSystem::InitLogger() {
+void IrrigationSystem::InitLogger()
+{
   Serial.begin(KERNEL_SERIAL_SPEED);
   logger.setLogOutput(&Serial);
   logger.setLogLevel(LOG_LEVEL);
@@ -89,15 +102,18 @@ void IrrigationSystem::InitLogger() {
 
 void IrrigationSystem::InitWifi() { WiFiConnection::WifiInitialize(); }
 
-void IrrigationSystem::InitDevices() {
-  if (!ioExpander.init(0x38)) {
+void IrrigationSystem::InitDevices()
+{
+  if (!ioExpander.init(0x38))
+  {
     logger << LOG_ERROR << "Cant't initialize IO Expander" << EndLine;
   }
 }
 
 void IrrigationSystem::InitSensors() {}
 
-void IrrigationSystem::InitRelays() {
+void IrrigationSystem::InitRelays()
+{
   logger << LOG_INFO << "Creating relay configurations" << EndLine;
   // TODO: Create a flexible interface for relay building from eeprom?
   relays = RelayCollectionBuilder::create()
@@ -124,7 +140,8 @@ void IrrigationSystem::InitRelays() {
                .done()
                ->build();
   // TODO: need to change the way it is saving once it is refactored
-  if (!storage.getPrevSavedInfo()) {
+  if (!storage.getPrevSavedInfo())
+  {
     storage.saveConfiguration(0, 20, 50, 0, 20, ALL_WEEK);
     storage.saveConfiguration(1, 20, 53, 0, 30, ALL_WEEK);
     storage.saveConfiguration(2, 20, 54, 0, 35, ALL_WEEK);
@@ -134,7 +151,8 @@ void IrrigationSystem::InitRelays() {
   logger << LOG_INFO << LOGGER_TEXT_GREEN << "Done!" << EndLine;
 }
 
-void IrrigationSystem::ScanI2CDevicesAndDumpTable() {
+void IrrigationSystem::ScanI2CDevicesAndDumpTable()
+{
   uint8_t row = 0;
   char buffer[3];
   Wire.begin();
@@ -146,18 +164,23 @@ void IrrigationSystem::ScanI2CDevicesAndDumpTable() {
          << EndLine;
   logger << LOG_INFO << F("  00: -- ");
 
-  for (size_t i = 1; i < 0x80; i++) {
+  for (size_t i = 1; i < 0x80; i++)
+  {
     test.setAddress(i);
 
-    if (i % 16 == 0) {
+    if (i % 16 == 0)
+    {
       row += 0x10;
       sprintf(buffer, "%02X", row);
       logger << EndLine << LOG_INFO << F("  ") << buffer << F(": ");
     }
 
-    if (test.isConnected()) {
+    if (test.isConnected())
+    {
       sprintf(buffer, "%02X", i);
-    } else {
+    }
+    else
+    {
       sprintf(buffer, "--");
     }
 
@@ -167,33 +190,50 @@ void IrrigationSystem::ScanI2CDevicesAndDumpTable() {
   logger << EndLine;
 }
 
-void IrrigationSystem::ConfigureTimeProviders() {
+void IrrigationSystem::ConfigureTimeProviders()
+{
   timeProviders.TryToRegisterTimeProvider<TimeProviderNTP>();
   timeProviders.TryToRegisterTimeProvider<TimeProviderRTC>();
 
   timeProviders.init();
 }
 
-bool IrrigationSystem::IsSystemInitializedAtMinimal() {
-  if (timeProviders.countTimeProviders() == 0) {
+bool IrrigationSystem::IsSystemInitializedAtMinimal()
+{
+  if (timeProviders.countTimeProviders() == 0)
+  {
     return false;
   }
 
-  if (!ioExpander.isConnected()) {
+  if (!ioExpander.isConnected())
+  {
     return false;
   }
 
   return true;
 }
 
-void IrrigationSystem::InitDisplay() {
-  if (!display.init(0x3C)) {
+void IrrigationSystem::InitDisplay()
+{
+  if (!display.init(0x3C))
+  {
     logger << LOG_ERROR << "Can't initialize Display" << EndLine;
   }
 }
 
-void IrrigationSystem::ConfigureNVRAM() {
+void IrrigationSystem::ConfigureNVRAM()
+{
   logger << LOG_INFO << "Initializing NVRAM Storage" << EndLine;
   storage.init(NVRAM_MAX_RELAYS);
   storage.dumpEEPROMValues();
+}
+
+void IrrigationSystem::InitBlynk()
+{
+  String t;
+  logger << LOG_INFO << "Starting blynk" << EndLine;
+  t = storage.getToken();
+  char *token = new char[t.length() + 1];
+  strcpy(token, t.c_str());
+  KlicBlynk::init(token);
 }

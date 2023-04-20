@@ -52,6 +52,7 @@ class IrrigationSystem {
     void InitSensors();
     void InitRelays();
     void InitDisplay();
+    void InitBlynk();
     void ConfigureTimeProviders();
     void ConfigureNVRAM();
 
