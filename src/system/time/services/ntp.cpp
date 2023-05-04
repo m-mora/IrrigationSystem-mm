@@ -42,6 +42,8 @@ bool TimeProviderNTP::update() {
   bool status = this->updateNTP();
 
   DateTime _dateTime = DateTime(timeClient.getEpochTime());
+  logger << LOG_DEBUG << " Updated NTP date: " << Time_s(_dateTime).toString() << EndLine;
+
   if (!status || (_dateTime.year() == 2036)) {
     return false;
   }

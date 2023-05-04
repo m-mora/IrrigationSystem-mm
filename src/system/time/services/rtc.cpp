@@ -13,7 +13,7 @@ TimeProviderRTC::TimeProviderRTC() {}
 bool TimeProviderRTC::init() {
   logger << LOG_INFO << "Initializing RTC..." << EndLine;
   _type = BACKUP;
-  _secondsThreshold = 1;
+  _secondsThreshold = 0;
   if (!rtc.begin()) {
     logger << LOG_ERROR << "Can't initialize RTC" << EndLine;
     return false;
@@ -30,6 +30,8 @@ bool TimeProviderRTC::init() {
  */
 bool TimeProviderRTC::update() {
   DateTime now = rtc.now();
+  logger << LOG_DEBUG << " Updated RTC date: " << Time_s(now).toString() << EndLine;
+
   if (now.unixtime() <
       BUILD_TIME_UNIX -
           21600)  // TODO: fix the compiler time to considere time zone offset
@@ -42,6 +44,7 @@ bool TimeProviderRTC::update() {
   datetime.hour = now.hour();
   datetime.minute = now.minute();
   datetime.second = now.second();
+
   return true;
 }
 

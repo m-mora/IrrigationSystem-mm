@@ -13,13 +13,18 @@ class SystemTimeProvider : public ITimeProvider {
 
   LinkedList<ProviderUpdateEvents> providers;
 
+  struct LatestDateTimeWithProviderIndex {
+    int providerIndex;
+    DateTime latestNow;
+  };
+
  public:
   SystemTimeProvider() : providers() {}
 
   template <typename Tprovider>
   bool TryToRegisterTimeProvider() {
     Tprovider *p = new Tprovider();
-    providers.add({p, 1});
+    providers.add({p, 0});
     return true;
   }
 
@@ -38,75 +43,87 @@ class SystemTimeProvider : public ITimeProvider {
   bool init() {
     bool success = true;
     logger << LOG_INFO << "Initializing Time Providers" << EndLine;
-    _for_each(providers, _tp, ProviderUpdateEvents) {
+    for (int i = 0; i < providers.size(); i++) {
+      ProviderUpdateEvents& _tp = providers[i];
       bool success = _tp.provider->init();
 
-      if (success) {
-        _tp.timeUntilUpdate = _tp.provider->getSecondsThreshold();
-        logger << LOG_INFO << "  - Init " << _tp.provider->getTypeName()
-               << LOGGER_TEXT_GREEN << " Success" << EndLine
-               << "    Updating each " << _tp.timeUntilUpdate << EndLine;
-      } else {
+      if (!success) {
         success = false;
         logger << LOG_ERROR << "  - Init " << _tp.provider->getTypeName()
                << LOGGER_TEXT_RED << " Failure!" << EndLine;
         providers.remove(i);
         delete _tp.provider;
         i--;
+        continue;
       }
+
+      _tp.timeUntilUpdate = _tp.provider->getSecondsThreshold();
+      logger << LOG_INFO << "  - Init " << _tp.provider->getTypeName()
+              << LOGGER_TEXT_GREEN << " Success" << EndLine
+              << LOG_DEBUG << "   Updating each " << _tp.timeUntilUpdate << EndLine;
     }
+    logger << LOG_INFO << "Initializing Time Providers - Finished" << EndLine;
     return success;
   }
 
   bool update() {
-    DateTime now = getLatestDateTimeFromAllSources();
-    if (now.unixtime() == SECONDS_FROM_1970_TO_2000) {
+    LatestDateTimeWithProviderIndex result = getLatestDateTimeFromAllSources();
+    if (result.latestNow.unixtime() == SECONDS_FROM_1970_TO_2000) {
       return false;
     }
-    datetime = now;
-    updateBackupSourcesWithDateTime(now);
+    datetime = result.latestNow;
+    updateBackupSourcesWithDateTime(result);
     return true;
   }
 
  private:
-  DateTime getLatestDateTimeFromAllSources() {
-    DateTime now = DateTime(SECONDS_FROM_1970_TO_2000);
-    _for_each(providers, _tp, ProviderUpdateEvents) {
+  LatestDateTimeWithProviderIndex getLatestDateTimeFromAllSources() {
+    LatestDateTimeWithProviderIndex result;
+    result.latestNow = DateTime(SECONDS_FROM_1970_TO_2000);
+
+    for (int i = 0; i < providers.size(); i++) {
+      ProviderUpdateEvents& _tp = providers[i];
       logger << LOG_DEBUG << "Updating " << _tp.provider->getTypeName() << EndLine;
-      _tp.timeUntilUpdate--;
-      if (_tp.timeUntilUpdate == 0) {
-        bool status = _tp.provider->update();
-        _tp.timeUntilUpdate = _tp.provider->getSecondsThreshold();
-        if (status) {
-          logger << LOG_DEBUG << LOGGER_TEXT_GREEN << "Success!" << EndLine;
-          DateTime d = _tp.provider->get().toDateTime();
-          if (now <= d) {
-            now = d;
-          }
-          if (_tp.provider->getType() == PRIMARY) {
-            return now;
-          }
-        } else {
-          logger << LOG_ERROR << "Error while updating time provider!" << EndLine;
+      if (_tp.timeUntilUpdate > 0) {
+        logger << LOG_DEBUG << "  In " << _tp.timeUntilUpdate << "s" << EndLine;
+        _tp.timeUntilUpdate--;
+        continue;
+      }
+
+      _tp.timeUntilUpdate = _tp.provider->getSecondsThreshold();
+      if (!_tp.provider->update()) {
+        logger << LOG_ERROR << "Error while updating time provider!" << EndLine;
+        continue;
+      }
+
+      DateTime d = _tp.provider->get().toDateTime();
+      if (result.latestNow <= d) {
+        result.latestNow = d;
+        result.providerIndex = i;
+        logger << LOG_DEBUG << LOGGER_TEXT_GREEN << "Success!" << EndLine;
+
+        if (_tp.provider->getType() == PRIMARY) {
+          break;
         }
       } else {
-        logger << LOG_DEBUG << "  In " << _tp.timeUntilUpdate << "s" << EndLine;
+        logger << LOG_DEBUG << LOGGER_TEXT_YELLOW << "Not most recent data!" << EndLine;
       }
     }
-    return now;
+    return result;
   }
 
-  void updateBackupSourcesWithDateTime(DateTime &dateTime) {
+  void updateBackupSourcesWithDateTime(LatestDateTimeWithProviderIndex &latestDateTimeWithProvider) {
     logger << LOG_DEBUG << "Set backups with time "
-           << Time_s(dateTime).toString() << EndLine;
+           << Time_s(latestDateTimeWithProvider.latestNow).toString() << EndLine;
 
-    _for_each(providers, _tp, ProviderUpdateEvents) {
-      if (_tp.provider->getType() != BACKUP) {
+    for (int i = 0; i < providers.size(); i++) {
+      ProviderUpdateEvents& _tp = providers[i];
+      if (_tp.provider->getType() != BACKUP || i == latestDateTimeWithProvider.providerIndex) {
         continue;
       }
       logger << LOG_DEBUG << LOGGER_TEXT_GREEN << " Backup provider "
              << _tp.provider->getTypeName() << EndLine;
-      _tp.provider->set(dateTime);
+      _tp.provider->set(latestDateTimeWithProvider.latestNow);
     }
   }
 };
