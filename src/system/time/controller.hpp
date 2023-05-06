@@ -45,14 +45,13 @@ class SystemTimeProvider : public ITimeProvider {
     logger << LOG_INFO << "Initializing Time Providers" << EndLine;
     for (int i = 0; i < providers.size(); i++) {
       ProviderUpdateEvents& _tp = providers[i];
-      bool success = _tp.provider->init();
 
-      if (!success) {
+      if (!_tp.provider->init()) {
         success = false;
         logger << LOG_ERROR << "  - Init " << _tp.provider->getTypeName()
                << LOGGER_TEXT_RED << " Failure!" << EndLine;
-        providers.remove(i);
         delete _tp.provider;
+        providers.remove(i);
         i--;
         continue;
       }
