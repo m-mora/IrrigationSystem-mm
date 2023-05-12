@@ -5,7 +5,15 @@
 
 ## Storage Configuration 
 
-To store the tokens required to connect to the _blynk server_, token and ID required for _telegram_ and the configuration time when the relays should turn on and for how long it uses the EEPROM library, the memorymap is as follow:
+This is the memry map used to store:
+- Blynk Token
+- Telegram
+  - Token
+  - Chat ID
+
+To manage the storage the EEPROM ligrary is used
+
+The memorymap is as follow:
 
 
 <table>
@@ -65,33 +73,35 @@ To store the tokens required to connect to the _blynk server_, token and ID requ
    </tbody>
 </table>
 
-where the configuration per each relay is:
+where the the time configuration per each relay in bytes is:
 
 <table>
     <thead>
         <tr>
-            <th>0</th>
-            <th>1</th>
-            <th>2</th>
-            <th>3</th>
-            <th>4</th>
-            <th>5</th>
-            <th>6</th>
+            <th colspan=8>Btye</tr>
+        </tr>
+        <tr>
             <th>7</th>
+            <th>6</th>
+            <th>5</th>
+            <th>4</th>
+            <th>3</th>
+            <th>2</th>
+            <th>1</th>
+            <th>0</th>
         </tr>
     </thead>
     <tbody>
       <tr>
-        <td colspan=1>Hour</td>
-        <td colspan=1>Min</td>
-        <td colspan=1>Seg</td>
-        <td colspan=1>Dur1</td>
-        <td colspan=1>Dur2</td>
-         <td colspan=1>Dur3</td>
-         <td colspan=1>Dur4</td>
-         <td colspan=1>Days</td>
-       </tr>
+        <td>n/a</td>
+        <td>Saturaday</td>
+        <td>Friday</td>
+        <td>Thursday</td>
+        <td>Wednesday</td>
+        <td>Tuesday</td>
+        <td>Monday</td>
+        <td>Sunday</td>
+      </tr>
    </tbody>
 </table>
-
 
