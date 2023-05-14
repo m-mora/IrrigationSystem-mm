@@ -59,7 +59,7 @@ void IrrigationSystem::update() {
     timeProviders.update();
     logger << LOG_INFO << "Now:  " << timeProviders.get().toString()
             << EndLine;
-    display.update(timeProviders.get().toString());
+    display.update(timeProviders.get().toString(), localBmp.get_temperature(), localBmp.get_pressure());
     WaterValve *relay = NULL;
     for (int i = 0; i < relays->size(); i++) {
       relay = relays->get(i);
@@ -105,7 +105,9 @@ void IrrigationSystem::InitDevices()
   }
 }
 
-void IrrigationSystem::InitSensors() {}
+void IrrigationSystem::InitSensors() {
+  localBmp.init();
+}
 
 void IrrigationSystem::InitRelays()
 {

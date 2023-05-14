@@ -35,8 +35,7 @@ class Display
 public:
   bool init(uint8_t address);
   void clean();
-  void update(String t);
-
+  void update(String t, float temp, uint32_t press);
 private:
   void initialDrawLine();
 };
