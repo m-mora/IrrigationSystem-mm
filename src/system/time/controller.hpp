@@ -56,7 +56,8 @@ class SystemTimeProvider : public ITimeProvider {
         continue;
       }
 
-      _tp.timeUntilUpdate = _tp.provider->getSecondsThreshold();
+      //_tp.timeUntilUpdate = _tp.provider->getSecondsThreshold();
+      _tp.timeUntilUpdate = 1;
       logger << LOG_INFO << "  - Init " << _tp.provider->getTypeName()
               << LOGGER_TEXT_GREEN << " Success" << EndLine
               << LOG_DEBUG << "   Updating each " << _tp.timeUntilUpdate << EndLine;

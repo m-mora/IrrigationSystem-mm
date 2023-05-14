@@ -45,6 +45,7 @@ bool IrrigationSystem::init()
   InitRelays();
   InitDisplay();
   InitBlynk();
+  InitTelegram();
   logger << LOG_INFO << "Initialization finished!" << EndLine;
 
   return IsSystemInitializedAtMinimal();
@@ -58,7 +59,7 @@ void IrrigationSystem::update() {
     timeProviders.update();
     logger << LOG_INFO << "Now:  " << timeProviders.get().toString()
             << EndLine;
-    display.update(timeProviders.get().toString());
+    display.update(timeProviders.get().toString(), localBmp.get_temperature(), localBmp.get_pressure());
     WaterValve *relay = NULL;
     for (int i = 0; i < relays->size(); i++) {
       relay = relays->get(i);
@@ -104,7 +105,9 @@ void IrrigationSystem::InitDevices()
   }
 }
 
-void IrrigationSystem::InitSensors() {}
+void IrrigationSystem::InitSensors() {
+  localBmp.init();
+}
 
 void IrrigationSystem::InitRelays()
 {
@@ -230,4 +233,10 @@ void IrrigationSystem::InitBlynk()
   char *token = new char[t.length() + 1];
   strcpy(token, t.c_str());
   KlicBlynk::init(token);
+}
+
+void IrrigationSystem::InitTelegram() {
+  String telegram_token, chat_id, b_token;
+  storage.getCredentials(chat_id,telegram_token,b_token);
+  Telegram::init(telegram_token,chat_id);
 }

@@ -30,6 +30,8 @@
 #include "time/controller.hpp"
 #include "utils/storage.h"
 #include "system/display/display.h"
+#include "system/connectivity/telegram.h"
+#include "system/sensors/bmp/bmp.h"
 
 #define KERNEL_SERIAL_SPEED 115200
 #define NVRAM_MAX_RELAYS    4
@@ -41,6 +43,7 @@ class IrrigationSystem {
     SystemTimeProvider timeProviders;
     IOExpander ioExpander;
     Display display;
+    bmpSensor localBmp;
     LinkedList<WaterValve*> *relays;
     //
     // Private methods
@@ -53,6 +56,7 @@ class IrrigationSystem {
     void InitRelays();
     void InitDisplay();
     void InitBlynk();
+    void InitTelegram();
     void ConfigureTimeProviders();
     void ConfigureNVRAM();
 

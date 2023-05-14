@@ -12,41 +12,32 @@
  * There is not restriction to use, modify and improve the code, so     *
  * please do it and share the improvements.                             *
  *                                                                      *
- * Letś have Fun!!                                                      *
+ * Let's have Fun!!                                                     *
  *                                                                      *
  * ---------------------------------------------------------------------*/
+#include <WiFiClientSecure.h>
+#include <UniversalTelegramBot.h>
+#include <ArduinoJson.h>
 
-#if !defined(__IRRIGATION_SYSTEM_CONNECTIVITY_WIFI_H__)
-#define __IRRIGATION_SYSTEM_CONNECTIVITY_WIFI_H__
+#include "utils/logger.h"
+#include "telegram.h"
 
-#include <WiFiManager.h>
 
-/**
- * @brief Specifies the wifi ssid.
- *
- */
-extern const char *WIFI_SSID;
+using namespace Telegram;
 
-/**
- * @brief Specifies the wifi password.
- *
- */
-extern const char *WIFI_PASSWORD;
+WiFiClientSecure secured_client;
+UniversalTelegramBot bot("DUMMY TOKEN", secured_client);
 
-namespace WiFiConnection
-{
+String ChatID;
 
-    /**
-     * @brief Initialize WIFI interface using the specified configuration.
-     *
-     * @param wifi_ssid      [Optional] WiFi SSID as a const char string.
-     * @param wifi_password  [Optional] WiFi Password as a const char string.
-     * @return wl_status_t   WiFi status code.
-     */
-    wl_status_t WifiInitialize(
-        const char *wifi_ssid = WIFI_SSID,
-        const char *wifi_password = WIFI_PASSWORD);
+void Telegram::init(String token, String _id) {
+  secured_client.setInsecure();
+  bot.updateToken(token);
+  ChatID = _id;
+  bot.sendMessage(ChatID,"Initializing Telegram in Irrigation System", "");
+  logger << LOG_DEBUG << "Get token " << bot.getToken() << EndLine;
+}
 
-    bool isConnected();
-};
-#endif // !__IRRIGATION_SYSTEM_CONNECTIVITY_WIFI_H__
+void Telegram::message(String m) {
+  bot.sendMessage(ChatID,m, "");
+}

@@ -41,7 +41,9 @@ void Display::clean()
   display.clearDisplay();
 }
 
-void Display::update(String t)
+
+
+void Display::update(String t, float temp, uint32_t press)
 {
   display.clearDisplay();
   display.setTextColor(WHITE);
@@ -49,8 +51,12 @@ void Display::update(String t)
   display.setTextSize(1);
   display.println("Current Time");
   display.println("");
-  display.setTextSize(2);
+  display.setTextSize(1);
   display.println(t);
+  display.drawFastHLine(0,display.getCursorY() + 1,1,WHITE);
+  display.printf("Temperature %2.2f C\n",temp);
+  display.printf("Pressure %u Pascal\n",press);
+
   display.display();
 }
 
